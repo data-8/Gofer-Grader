@@ -69,6 +69,24 @@ class Notebook:
         except NameError:
             pass
 
+    def auth(self, inline=False):
+        """
+        Legacy interface for authenticating to an okpy server.
+
+        Not supported, so we ignore for now.
+        """
+        # FIXME: A warning here?
+        pass
+
+    def submit(self):
+        """
+        Legacy interface for submitting a notebook to okpy server.
+
+        Not supported, so we ignore for now.
+        """
+        # FIXME: A warning here?
+        pass
+
     def grade(self, question, global_env=None):
         path = os.path.join(self.basedir, "tests", "{}.py".format(question))
         tests = parse_ok_test(path)
