@@ -5,7 +5,7 @@ from client.api.notebook import Notebook, parse_ok_test
 defined_variable = None
 seconds_in_a_minute = 60
 
-def test_ok_parse_simple_valid():
+def test_nb_grade_simple_valid():
     """
     Test parsing & running a simple oktest file.
     """
