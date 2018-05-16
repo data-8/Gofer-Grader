@@ -95,7 +95,7 @@ class Notebook:
             # The grade method should only be called directly from user / notebook
             # code. If some other method is calling it, it should also use the
             # inspect trick to pass in its parents' global env.
-            global_env = inspect.stack()[1][0].f_globals
+            global_env = inspect.currentframe().f_back.f_globals
         for test in tests:
             resp = test(global_env)
             if resp.grade == 0:
