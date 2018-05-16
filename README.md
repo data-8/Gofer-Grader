@@ -15,12 +15,23 @@ be collected and a grade assigned to them automatically.
 ## Why?
 
 [okpy](http://okpy.org/) is used at Berkeley for a number of large
-classes (CS61A, data8, etc). It has a lot of features for student
-management, office hours, providing feedback, autograding, etc.
-These are great for large classes, but come with an added complexity
-that makes it harder to use for smaller classes. It's featureset
-overlaps a lot other student management systems (such as EdX, Canvas,
-etc) - this makes it complex to use okpy with other systems.
+classes (CS61A, data8, etc). It has a lot of features that are
+very useful for large and diverse classes, such as:
 
-This project aims to re-implement a small and specific subset of
-okpy that does autograding only.
+1. Office Hours management
+2. Student assignment statistics
+3. Plagiarism detection
+4. Personalized feedback
+5. Backups of student submissions
+6. Support for Python, Scheme and other languages
+7. Hiding / locking tests when students are running them locally
+8. Mass automatic grading
+
+And many more.
+
+However, this comes with a complexity cost for instructors who only
+need a subset of these features and sysadmins operating an okpy server
+installation.
+
+This project is tightly scoped to only do automatic grading, and nothing
+else.
