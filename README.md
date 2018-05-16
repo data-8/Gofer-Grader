@@ -7,8 +7,8 @@ A subset of [okpy](http://okpy.org/) that only does grading.
 This library can be used to **autograde** Jupyter Notebooks and
 Python files.
 
-Instructors can write tests in the okpy file format (other format
-support coming soon), and students can dynamically check if their
+Instructors can write tests in a subset of the [okpy test format](docs/ok-test-format.md)
+(other formats coming soon), and students can dynamically check if their
 code is correct or not. These notebooks / .py files can later
 be collected and a grade assigned to them automatically.
 
