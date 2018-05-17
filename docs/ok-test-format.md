@@ -2,7 +2,7 @@
 
 We implement a specific subset of OK Tests that instructors
 can write. It doesn't have all the features that okpy has, but
-tries to be compatible wherever possible. 
+tries to be compatible wherever possible.
 
 An OK Test should be a valid python file that assigns a dictionary
 to a global variable named `test`. Let's explore this more with an
@@ -81,7 +81,7 @@ test = {
           'code': r"""
           >>> # The number of seconds you computed is too low by at least
           >>> # a factor of 5.
-          >>> # There are 10 years, some number of days in a year, some 
+          >>> # There are 10 years, some number of days in a year, some
           >>> # number of hours per day, minutes per hour, and seconds
           >>> # per minute. For example, this is almost right:
           >>> #   seconds_in_a_decade = 10*365*24*60*60

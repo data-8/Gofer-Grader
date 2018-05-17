@@ -1,6 +1,6 @@
 # Using okgrade
 
-1. Write your tests in [ok test format](ok-test-format.md),
+1. Write your tests in [ok test format](ok-test-format.html),
    and distribute them the same way you distribute lab notebooks
    to students.
 2. In the lab notebooks distributed to your students, import
@@ -9,6 +9,7 @@
    ```python
    from okgrade import grade
    ```
+
 3. At various points, insert `grading cells`, like:
 
    ```python
