@@ -45,6 +45,18 @@ def parse_ok_test(path):
 
 
 def grade(test_file_path, global_env=None):
+    """
+    Grade global_env against given test_file
+
+    If global_env is none, the global environment of the calling
+    function is used. The following two calls are equivalent:
+
+    grade('somefile.ok')
+
+    grade('somefile.ok', globals())
+
+    Returns a TestResult object.
+    """
     tests = parse_ok_test(test_file_path)
     if global_env is None:
         # Get the global env of our callers - one level below us in the stack
