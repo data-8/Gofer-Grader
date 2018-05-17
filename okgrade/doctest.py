@@ -40,7 +40,7 @@ class SingleDocTest:
         Run test with given global_environment.
         """
         test = doctest.DocTest(
-            [e for e in self.examples if type(e) is doctest.Example],
+            [e for e in self.examples if isinstance(e, doctest.Example)],
             global_environment,
             self.name,
             None,
