@@ -1,7 +1,12 @@
 import html
 
-
 class TestResult:
+    """
+    The result of running a test against an environment.
+
+    Contains a grade (float) and a dictionary of 'summaries'
+    that can be displayed to the user, in various mime types.
+    """
     def __init__(self, grade, summary_mimebundle):
         """
         Result of running a Test of some kind.
