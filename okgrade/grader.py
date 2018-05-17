@@ -68,6 +68,5 @@ def grade(test_file_path, global_env=None):
         resp = test(global_env)
         if resp.grade == 0:
             return resp
-    else:
-        # All tests passed!
-        return TestResult(1, "All tests passed!")
+    # All tests passed!
+    return TestResult(1, "All tests passed!")
