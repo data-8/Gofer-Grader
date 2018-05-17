@@ -35,3 +35,12 @@ installation.
 
 This project is tightly scoped to only do automatic grading, and nothing
 else.
+
+## Credit
+
+Lots of credit to the amazing teams that have worked on okpy over the
+years.
+
+1. [Academic Publications](https://okpy.org/about/publications/)
+2. [GitHub Organizatio](https://github.com/okpy)
+3. [ok-client GitHub repository](https://github.com/Cal-CS-61A-Staff/ok-client)
