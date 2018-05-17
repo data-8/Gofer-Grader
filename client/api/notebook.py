@@ -42,4 +42,15 @@ class Notebook:
             # code. If some other method is calling it, it should also use the
             # inspect trick to pass in its parents' global env.
             global_env = inspect.currentframe().f_back.f_globals
-        return grade(path, global_env)
+        result = grade(path, global_env)
+        # We display the output if we're in IPython.
+        # This keeps backwards compatibility with okpy's grade method
+        # which dumped into into stdout.
+        try:
+            __IPYTHON__
+            # We are in a Notebook / IPython! Let's display output
+            from IPython.display import display
+            display(result)
+        except NameError:
+            pass
+        return result
