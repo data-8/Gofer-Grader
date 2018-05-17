@@ -6,6 +6,12 @@ import inspect
 from okgrade.grader import grade
 
 class Notebook:
+    """
+    Legacy class representing a notebook + associated tests.
+
+    Provided for drop-in compatibility with projects that
+    use a small subset of okpy's features.
+    """
     def __init__(self, okfile):
         """
         okfile is path to .ok file.
