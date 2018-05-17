@@ -22,12 +22,12 @@ def parse_ok_test(path):
     assert len(test_spec['suites']) == 1
 
     # Do not support point values other than 1
-    assert test_spec['points'] == 1
+    assert test_spec.get('points', 1) == 1
 
     test_suite = test_spec['suites'][0]
 
     # Only support doctest. I am unsure if other tests are implemented
-    assert test_suite['type'] == 'doctest'
+    assert test_suite.get('type', 'doctest') == 'doctest'
 
     # Not setup and teardown supported
     assert not bool(test_suite.get('setup'))
