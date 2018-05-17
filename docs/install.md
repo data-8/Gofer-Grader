@@ -6,6 +6,10 @@ okgrade can be installed from [PyPI](https://pypi.org/project/okgrade).
 pip install okgrade
 ```
 
+Since both this package and the [okpy](https://pypi.org/project/okpy/) package
+provide a package named `client`, you **should not** have both of them installed
+in the same environment!
+
 ## Requirements
 
 okgrade currently requires Python 3.6. If required, we could also
