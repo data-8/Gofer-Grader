@@ -35,6 +35,13 @@ class Notebook:
         pass
 
     def grade(self, question, global_env=None):
+        """
+        Legacy interface for grading a question in an environment.
+
+        Acts similar to okgrade.grade, but displays the response
+        directly if running in a Jupyter Notebook / IPython terminal.
+        This keeps it compatible with okpy's interface.
+        """
         path = os.path.join(self.basedir, "tests", "{}.py".format(question))
         if global_env is None:
             # Get the global env of our callers - one level below us in the stack
