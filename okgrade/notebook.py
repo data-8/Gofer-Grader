@@ -14,7 +14,7 @@ def code_from_ipynb(nb, ignore_errors=False):
     """
     global_env = {
         # Set this to prevent recursive executions!
-        'OKGRADE_EXEC': True
+        '__OKGRADE__': True
     }
     for cell in nb['cells']:
         if cell['cell_type'] == 'code':
@@ -33,12 +33,6 @@ def grade_notebook(notebook_path, test_files):
     """
     Grade a notebook file & return grade
     """
-    try:
-        OKGRADE_EXEC
-        return
-    except NameError:
-        pass
-
     with open(notebook_path) as f:
         nb = json.load(f)
 
