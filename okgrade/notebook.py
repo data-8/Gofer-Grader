@@ -42,7 +42,7 @@ def grade_notebook(notebook_path, test_files):
     with open(notebook_path) as f:
         nb = json.load(f)
 
-    global_env = code_from_ipynb(nb)
+    global_env = code_from_ipynb(nb, ignore_errors=True)
 
     # FIXME: This needs to be more general
     results = [grade(tf, global_env) for tf in test_files]
