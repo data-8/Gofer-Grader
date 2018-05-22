@@ -1,26 +1,31 @@
 from contextlib import redirect_stderr, redirect_stdout
 import json
-from glob import glob
 from okgrade.grader import grade
 from okgrade.result import TestResult
 
-def code_from_ipynb(nb, ignore_errors=False):
+try:
+    from IPython.core.inputsplitter import IPythonInputSplitter
+except ImportError:
+    raise ImportError('IPython needs to be installed for notebook grading')
+
+def execute_notebook(nb, initial_env=None, ignore_errors=False):
     """
-    Get the code for a given notebook
+    Execute notebook & return the global environment that results from execution.
 
     If ignore_errors is True, exceptions are swallowed.
 
     nb is passed in as a dictionary that's a parsed ipynb file
     """
-    global_env = {
-        # Set this to prevent recursive executions!
-        '__OKGRADE__': True
-    }
+    if initial_env:
+        global_env = initial_env.copy()
+    else:
+        global_env = {}
     for cell in nb['cells']:
         if cell['cell_type'] == 'code':
             # transform the input to executable Python
             # FIXME: use appropriate IPython functions here
-            source = '\n'.join(cell['source']).replace('%matplotlib inline', '')
+            isp = IPythonInputSplitter(line_input_checker=False)
+            source = isp.transform_cell('\n'.join(cell['source']))
             try:
                 with open('/dev/null', 'w') as f, redirect_stdout(f), redirect_stderr(f):
                     exec(source, global_env)
@@ -36,7 +41,12 @@ def grade_notebook(notebook_path, test_files):
     with open(notebook_path) as f:
         nb = json.load(f)
 
-    global_env = code_from_ipynb(nb, ignore_errors=True)
+    initial_env = {
+        # Set this to prevent recursive executions!
+        '__OKGRADE__': True
+    }
+
+    global_env = execute_notebook(nb, initial_env, ignore_errors=True)
 
     # FIXME: This needs to be more general
     results = [grade(tf, global_env) for tf in test_files]
