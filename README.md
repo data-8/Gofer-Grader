@@ -1,5 +1,8 @@
 # okgrade
 
+[![CircleCI](https://circleci.com/gh/grading/okgrade/tree/master.svg?style=shield)](https://circleci.com/gh/grading/okgrade/tree/master)
+[![codecov](https://codecov.io/gh/grading/okgrade/branch/master/graph/badge.svg)](https://codecov.io/gh/grading/okgrade)
+
 A subset of [okpy](http://okpy.org/) that only does grading.
 
 ## What?
