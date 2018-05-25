@@ -37,7 +37,9 @@ jobs:
 
       - run:
           name: post code coverage stats
-          command: codecov
+          command: |
+            . venv/bin/activate
+            codecov
 
       - store_artifacts:
           path: test-reports
