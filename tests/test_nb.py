@@ -1,7 +1,7 @@
 import os
 import json
 import pytest
-from okgrade.notebook import execute_notebook
+from okgrade.notebook import execute_notebook, _global_anywhere
 
 here = os.path.dirname(__file__)
 
@@ -56,4 +56,23 @@ def test_catch_error():
         nb = json.load(f)
 
     with pytest.raises(NameError):
-        return_env = execute_notebook(nb, ignore_errors=False)
+        execute_notebook(nb, ignore_errors=False)
+
+def test_global_anywhere():
+    """
+    Test multiple levels of global checking
+    """
+    globals_l1 = {
+        'LEVEL': 1
+    }
+
+    l1_code = """from okgrade.notebook import _global_anywhere
+NEW_LEVEL = _global_anywhere('LEVEL')"""
+
+    # This is 'one' level up
+    assert _global_anywhere('_global_anywhere') == _global_anywhere
+
+    # Make sure this works inside exec too!
+    exec(l1_code, globals_l1)
+    assert globals_l1['NEW_LEVEL'] == 1
+
