@@ -33,7 +33,11 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            py.test -vvv tests/
+            py.test --cov=okgrade tests/
+
+      - run:
+          name: post code coverage stats
+          command: codecov
 
       - store_artifacts:
           path: test-reports
