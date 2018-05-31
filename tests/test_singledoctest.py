@@ -17,6 +17,19 @@ def test_make_test_pass():
         "Test test passed!"
     )
 
+def test_make_test_partial():
+    """
+    If there are two tests, and one fails, they all fail
+    """
+    docstring = r"""
+    >>> g == "Hello"
+    True
+    >>> g == "Not Hello"
+    """
+    test = SingleDocTest("test", docstring)
+    result = test({'g': "Hello"})
+    assert result.grade == 0
+
 def test_make_test_fail():
     """
     Test passing test runs with tests from make_test
