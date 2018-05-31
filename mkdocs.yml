@@ -1,0 +1,10 @@
+site_name: okgrade Documentation
+
+pages:
+  - Home: index.md
+  - Installation: install.md
+  - OK Test Format: ok-test-format.md
+  - Usage: using.md
+
+theme: readthedocs
+   
