@@ -3,7 +3,7 @@ Backwards compatibility shim for old okpy API
 """
 import os
 import inspect
-from okgrade.grader import grade
+from okgrade.ok import grade
 
 class Notebook:
     """

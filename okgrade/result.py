@@ -4,33 +4,31 @@ class TestResult:
     """
     The result of running a test against an environment.
 
-    Contains a grade (float) and a dictionary of 'summaries'
-    that can be displayed to the user, in various mime types.
+    A Test can only result in a pass or fail. If it failed, it
+    can produce a 'hint' that can be shown to the user.
     """
-    def __init__(self, grade, summary_mimebundle):
+    def __init__(self, passed, hint_bundle=None):
         """
         Result of running a Test of some kind.
 
-        grade - float, the grade this test produced.
-        summary_mimebundle - dict | string, mapping mimetypes to summaries.
-                             If string is passed in, assume it is for mimetype 
-                             text/plain.
+        passed - True if this test passed, false otherwise
+        hint_bundle -   dict | string, mapping mimetypes to hints.
+                        If string is passed in, assume it is for mimetype
+                        text/plain.
         """
-        self.grade = grade
-        if isinstance(summary_mimebundle, str):
-            self.summary_mimebundle = {'text/plain': summary_mimebundle}
+        self.passed = passed
+        if isinstance(hint_bundle, str):
+            self.hint_bundle = {'text/plain': hint_bundle}
         else:
-            if 'text/plain' not in summary_mimebundle:
-                raise ValueError('summary_mimebundle must contain text/plain')
-            self.summary_mimebundle = summary_mimebundle
+            self.hint_bundle = hint_bundle
 
-    def get_summary(self, mimetype='text/plain'):
+    def get_hint(self, mimetype='text/plain'):
         """
-        Return summary for this TestResult.
+        Return hint for this TestResult.
 
         If mimetype is not passed in, 'text/plain' is assumed
         """
-        return self.summary_mimebundle[mimetype]
+        return self.hint_bundle[mimetype]
 
     def _repr_html_(self):
         """
@@ -38,13 +36,13 @@ class TestResult:
 
         Used by IPython to display pretty results
         """
-        if 'text/html' in self.summary_mimebundle:
-            return self.get_summary('text/html')
+        if 'text/html' in self.hint_bundle:
+            return self.get_hint('text/html')
         else:
-            return '<pre>' + html.escape(self.get_summary('text/plain')) + '</pre>'
+            return '<pre>' + html.escape(self.get_hint('text/plain')) + '</pre>'
 
     def __eq__(self, other):
         if not isinstance(other, TestResult):
             raise ValueError('Can not compare TestResult object with object of type {}'.format(type(other)))
 
-        return other.grade == self.grade and other.summary_mimebundle == self.summary_mimebundle
+        return other.passed == self.passed and other.hint_bundle == self.hint_bundle

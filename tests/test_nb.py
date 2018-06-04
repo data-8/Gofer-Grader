@@ -2,6 +2,8 @@ import os
 import json
 import pytest
 from glob import glob
+from okgrade.ok import parse_ok_test
+from okgrade.suite import TestSuite
 from okgrade.notebook import execute_notebook, _global_anywhere, grade_notebook
 
 here = os.path.dirname(__file__)
@@ -81,14 +83,15 @@ def test_grade_notebook():
     """
     Test notebooks that grade at various percentages
     """
-    tests_path = glob(os.path.join(here, 'notebooks/grading/tests/q*.py'))
+    test_paths = glob(os.path.join(here, 'notebooks/grading/tests/q*.py'))
 
+    test_suite = TestSuite([parse_ok_test(p) for p in test_paths], TestSuite.PROPORTIONAL)
     full_grade_notebook = os.path.join(here, 'notebooks/grading/full-grade.ipynb')
-    assert grade_notebook(full_grade_notebook, tests_path).grade == 1
+    assert grade_notebook(full_grade_notebook, test_suite).grade == 1
 
     half_grade_notebook = os.path.join(here, 'notebooks/grading/half-grade.ipynb')
-    assert grade_notebook(half_grade_notebook, tests_path).grade == 0.5
+    assert grade_notebook(half_grade_notebook, test_suite).grade == 0.5
 
     zero_grade_notebook = os.path.join(here, 'notebooks/grading/zero-grade.ipynb')
-    assert grade_notebook(zero_grade_notebook, tests_path).grade == 0
+    assert grade_notebook(zero_grade_notebook, test_suite).grade == 0
 

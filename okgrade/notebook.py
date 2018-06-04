@@ -1,8 +1,8 @@
 from contextlib import redirect_stderr, redirect_stdout
 import json
 import inspect
-from okgrade.grader import grade
 from okgrade.result import TestResult
+from okgrade.suite import TestSuite
 
 try:
     from IPython.core.inputsplitter import IPythonInputSplitter
@@ -50,7 +50,7 @@ def _global_anywhere(varname):
     raise NameError(f'{varname} not found in any globals in the stack')
 
 
-def grade_notebook(notebook_path, test_files):
+def grade_notebook(notebook_path, test_suite):
     """
     Grade a notebook file & return grade
     """
@@ -75,15 +75,4 @@ def grade_notebook(notebook_path, test_files):
 
     global_env = execute_notebook(nb, initial_env, ignore_errors=True)
 
-    # FIXME: This needs to be more general
-    results = [grade(tf, global_env) for tf in test_files]
-    
-    test_grade = sum([r.grade for r in results]) / len(results)
-    if test_grade == 1:
-        return TestResult(1.0, 'Grade is: 100%')
-    else:
-        # FIXME: This is terrible!
-        grade_pct = test_grade * 100
-        summary = f"Grade is: {grade_pct}%\n"
-        summary += "\n".join([r.get_summary() for r in results])
-        return TestResult(test_grade, summary)
+    return test_suite.run(global_env)
