@@ -5,6 +5,8 @@
 
 A subset of [okpy](http://okpy.org/) that only does grading.
 
+[See the okgrade documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
+
 ## What?
 
 This library can be used to **autograde** Jupyter Notebooks and

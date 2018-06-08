@@ -2,8 +2,6 @@
 
 `okgrade` is a small library for autograding Jupyter notebooks & python files.
 
-[See the okgrade documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
-
 ## What is autograding?
 
 **Autograding** runs a series of **tests** against student submitted code,
