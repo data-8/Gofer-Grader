@@ -1,4 +1,5 @@
 import html
+from vdom.helpers import div, strong, pre
 
 class TestResult:
     """
@@ -7,7 +8,7 @@ class TestResult:
     A Test can only result in a pass or fail. If it failed, it
     can produce a 'hint' that can be shown to the user.
     """
-    def __init__(self, passed, hint_bundle=None):
+    def __init__(self, test, passed, hint_bundle=None):
         """
         Result of running a Test of some kind.
 
@@ -17,10 +18,20 @@ class TestResult:
                         text/plain.
         """
         self.passed = passed
+        self.test = test
         if isinstance(hint_bundle, str):
             self.hint_bundle = {'text/plain': hint_bundle}
         else:
             self.hint_bundle = hint_bundle
+
+    def _repr_vdom_(self):
+        if self.passed:
+            return div(self.test.name, ': ', strong('PASSED!'))
+        else:
+            return div(
+                    self.test.name, ': ', strong('FAILED!'),
+                    pre(self.get_hint('text/plain')),
+            )
 
     def get_hint(self, mimetype='text/plain'):
         """

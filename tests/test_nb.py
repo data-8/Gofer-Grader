@@ -85,7 +85,7 @@ def test_grade_notebook():
     """
     test_paths = glob(os.path.join(here, 'notebooks/grading/tests/q*.py'))
 
-    test_suite = TestSuite([parse_ok_test(p) for p in test_paths], TestSuite.PROPORTIONAL)
+    test_suite = TestSuite('notebook_tests', [parse_ok_test(p) for p in test_paths], TestSuite.PROPORTIONAL)
     full_grade_notebook = os.path.join(here, 'notebooks/grading/full-grade.ipynb')
     assert grade_notebook(full_grade_notebook, test_suite).grade == 1
 
@@ -94,4 +94,3 @@ def test_grade_notebook():
 
     zero_grade_notebook = os.path.join(here, 'notebooks/grading/zero-grade.ipynb')
     assert grade_notebook(zero_grade_notebook, test_suite).grade == 0
-

@@ -1,4 +1,5 @@
 from okgrade.result import TestResult
+from vdom.helpers import div, pre, strong
 
 class TestSuiteResult:
     """
@@ -7,7 +8,30 @@ class TestSuiteResult:
     def __init__(self, test_suite, grade, results):
         self.test_suite = test_suite
         self.results = results
+        for r in results:
+            r.parent = self
         self.grade = grade
+
+    def _repr_vdom_(self):
+        """
+        Return HTML representation of this test result
+        """
+        style = {
+            'margin-left': '12px',
+            'border-left': '1px solid',
+            'border-top': '1px solid',
+            'padding-left': '4px',
+            'padding-top': '4px'
+        }
+        items = [div('Grade for ', strong(self.test_suite.name), ': {}%'.format(self.grade * 100))]
+        if self.grade != 1:
+            for r in self.results:
+                items.append(div(r._repr_vdom_(), style=style))
+        return div(*items)
+
+    def _repr_html_(self):
+        return self._repr_vdom_().to_html()
+
 
 class TestSuite:
     """
@@ -23,8 +47,9 @@ class TestSuite:
     MUST_PASS = 1
     PROPORTIONAL = 2
 
-    def __init__(self, tests, scoring_strategy=MUST_PASS):
+    def __init__(self, name, tests, scoring_strategy=MUST_PASS):
         # Tests can be Test or TestSuite objects
+        self.name = name
         self.tests = tests
         self.scoring_strategy = scoring_strategy
 
