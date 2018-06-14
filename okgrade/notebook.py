@@ -51,7 +51,7 @@ def _global_anywhere(varname):
     raise NameError(f'{varname} not found in any globals in the stack')
 
 
-def grade_notebook(notebook_path, test_files):
+def grade_notebook(notebook_path, test_files, ignore_errors=True):
     """
     Grade a notebook file & return grade
     """
@@ -74,7 +74,7 @@ def grade_notebook(notebook_path, test_files):
         '__OKGRADE__': True
     }
 
-    global_env = execute_notebook(nb, initial_env, ignore_errors=True)
+    global_env = execute_notebook(nb, initial_env, ignore_errors=ignore_errors)
 
     # FIXME: This needs to be more general
     results = [grade(tf, global_env) for tf in test_files]
