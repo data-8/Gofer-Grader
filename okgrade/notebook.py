@@ -27,7 +27,7 @@ def execute_notebook(nb, initial_env=None, ignore_errors=False):
             # FIXME: use appropriate IPython functions here
             isp = IPythonInputSplitter(line_input_checker=False)
             # FIXME: We just strip out all magics for now
-            source = isp.transform_cell('\n'.join(l for l in cell['source'] if not l.startswith('%')))
+            source = isp.transform_cell(''.join(l for l in cell['source'] if not l.startswith('%')))
             try:
                 with open('/dev/null', 'w') as f, redirect_stdout(f), redirect_stderr(f):
                     exec(source, global_env)
