@@ -1,6 +1,14 @@
 import inspect
 from okgrade.doctest import SingleDocTest
 from okgrade.result import TestResult
+try:
+    from IPython.core.formatters import BaseFormatter
+
+    class NullFormatter(BaseFormatter):
+        def __call__(self, obj):
+            return
+except NameError:
+    pass
 
 def parse_ok_test(path):
     """
@@ -64,8 +72,20 @@ def grade(test_file_path, global_env=None):
         # code. If some other method is calling it, it should also use the
         # inspect trick to pass in its parents' global env.
         global_env = inspect.currentframe().f_back.f_globals
+    try:
+        from IPython import get_ipython
+        ipy = get_ipython()
+    except NameError:
+        ipy = None
     for test in tests:
-        resp = test(global_env)
+        try:
+            if ipy is not None:
+                old_formatters = ipy.display_formatter.formatters
+                ipy.display_formatter.formatters = {'text/plain': NullFormatter()}
+            resp = test(global_env)
+        finally:
+            if ipy is not None:
+                ipy.display_formatter.formatters = old_formatters
         if resp.grade == 0:
             return resp
     # All tests passed!
