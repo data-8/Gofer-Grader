@@ -1,14 +1,7 @@
 import inspect
 from okgrade.doctest import SingleDocTest
 from okgrade.result import TestResult
-try:
-    from IPython.core.formatters import BaseFormatter
-
-    class NullFormatter(BaseFormatter):
-        def __call__(self, obj):
-            return
-except NameError:
-    pass
+from okgrade.utils import hide_outputs
 
 def parse_ok_test(path):
     """
@@ -74,18 +67,13 @@ def grade(test_file_path, global_env=None):
         global_env = inspect.currentframe().f_back.f_globals
     try:
         from IPython import get_ipython
+        from IPython.core.pylabtools import select_figure_formats
         ipy = get_ipython()
     except NameError:
         ipy = None
     for test in tests:
-        try:
-            if ipy is not None:
-                old_formatters = ipy.display_formatter.formatters
-                ipy.display_formatter.formatters = {'text/plain': NullFormatter()}
+        with hide_outputs():
             resp = test(global_env)
-        finally:
-            if ipy is not None:
-                ipy.display_formatter.formatters = old_formatters
         if resp.grade == 0:
             return resp
     # All tests passed!
