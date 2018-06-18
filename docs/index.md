@@ -1,6 +1,9 @@
 # okgrade
 
 `okgrade` is a small library for autograding Jupyter notebooks & python files.
+It is not dependent on any other grading packages and tools (such as `okpy` or
+`nbgrader`), though it may be used *alongside* them in order to facilitate the
+grading process.
 
 ## What is autograding?
 
@@ -24,7 +27,7 @@ without having to wait for an instructor to grade & provide feedback.
 
 ## Scope of this project
 
-This project is tightly scoped to provide only the following:
+This project is tightly-scoped to provide only the following:
 
 1. Write grading tests in multiple formats
 2. Run grading tests (interactively or in batch) against a Jupyter Notebook or
@@ -33,7 +36,7 @@ This project is tightly scoped to provide only the following:
    results of single tests.
 
 Everything else is out of scope, and should be implemented elsewhere. Examples
-of features that are out of scope are:
+of features that are **out of scope** are:
 
 1. Distributing notebooks / lab materials to users
 2. Collecting notebooks / lab materials from users
@@ -44,3 +47,12 @@ of features that are out of scope are:
 6. Ponies
 
 This list is not exhaustive :)
+
+## Examples
+
+See the [examples folder](https://github.com/grading/okgrade/examples)
+on GitHub for sample notebooks and `okgrade` test files that demonstrate the
+functionality of this package. For an interactive version of these examples,
+click on the Binder badge below.
+
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/grading/okgrade/master?filepath=examples)

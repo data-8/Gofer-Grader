@@ -7,6 +7,11 @@ A subset of [okpy](http://okpy.org/) that only does grading.
 
 [See the okgrade documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
 
+For an interactive version of these examples,
+click on the Binder badge below.
+
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/grading/okgrade/master?filepath=examples)
+
 ## What?
 
 This library can be used to **autograde** Jupyter Notebooks and
