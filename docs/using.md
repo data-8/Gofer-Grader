@@ -14,16 +14,16 @@ it runs against your notebooks. Currently, it supports the
 structure. See the [examples folder](https://github.com/grading/okgrade/examples)
 for sample notebooks and okgrade tests.
 
-   
-## Interactive feedback
+
+## Common use-cases
+
+### Interactive feedback
 
 This section covers how to prepare a notebook to give interactive
 feedback to students.
 
-
 1. Write your tests in [ok test format](ok-test-format.html),
-   and distribute them the same way you distribute lab notebooks
-   to students.
+   and **distribute them along with your student notebooks**.
 
 2. In the lab notebooks distributed to your students, import
    the `grade` function on top:
@@ -32,7 +32,7 @@ feedback to students.
    from okgrade import grade
    ```
 
-3. At various points in the notebook, insert `grading cells`, like:
+3. At various points in the notebook, insert "grading feedback" cells, like:
 
    ```python
    grade('tests/q1.py')
@@ -40,37 +40,39 @@ feedback to students.
 
    This will run the tests in `q1.py` with the student's
    current environment, and provide interactive results.
-   
+   Note that in this case, **no grading occurs**, this function is used
+   solely to give feedback.
+
 For an example notebook that uses this pattern, see
 the [interactive example](https://github.com/grading/okgrade/examples/interactive_feedback.ipynb)
 
-## As an auto-grading tool
+### As an auto-grading tool
 
 You can also use `okgrade` to quickly grade the contents of multiple
 student notebooks against multiple tests. To do so, take the
 following steps:
 
-1. Write your tests in [ok test format](ok-test-format.html). You
-   do not need to distribute these tests to your students, as they
+1. Write your tests in [ok test format](ok-test-format.html). **You
+   do not need to distribute these tests to your students**, as they
    will not be running them interactively.
 
 2. After students have finished their work, make sure you have
    access to their notebooks. Each notebook should be able to be run
    successfully without error in order to receive full marks.
-   
+
 3. In a Python script, import the `grade_notebook` function:
 
    ```python
    from okgrade.notebook impor grade_notebook
    ```
-   
+
 4. Pass the path to a student notebook, as well as a list of paths to tests
    that you wish to run against that notebook.
-   
+
    ```python
    result = grade_notebook(path_to_student_notebook, list_of_okgrade_tests)
    ```
-   
+
 5. Repeat for all students. `result` is an object that contains the fraction
    of correctly-passed tests for each notebook.
 
@@ -79,7 +81,7 @@ Remember, the tests are run *after all notebook cells have been executed*.
 For an example notebook that uses this pattern, see
 the [autograding example](https://github.com/grading/okgrade/examples/grade_notebooks.ipynb)
 
-## As a drop-in replacement for okpy
+### As a drop-in replacement for okpy
 
 `okpy` is a full-stack course management and grading tool currently being used
 at UC Berkeley. It is possible to use `okgrade` to grade `okpy`-compliant notebooks.
