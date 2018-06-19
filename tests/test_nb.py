@@ -91,4 +91,8 @@ def test_grade_notebook():
 
     zero_grade_notebook = os.path.join(here, 'notebooks/grading/zero-grade.ipynb')
     assert grade_notebook(zero_grade_notebook, tests_path).grade == 0
+    
+    # Empty test list given
+    with pytest.raises(ValueError):
+        grade_notebook(zero_grade_notebook, [])
 

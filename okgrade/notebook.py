@@ -3,6 +3,7 @@ import json
 import inspect
 from okgrade.grader import grade
 from okgrade.result import TestResult
+import os.path as op
 
 try:
     from IPython.core.inputsplitter import IPythonInputSplitter
@@ -52,7 +53,21 @@ def _global_anywhere(varname):
 
 def grade_notebook(notebook_path, test_files):
     """
-    Grade a notebook file & return grade
+    Grade a notebook file & return grade.
+    
+    Parameters
+    ----------
+    notebook_path : string
+        A path to a Jupyter Notebook. Tests will be run on the environment
+        within this notebook *after* all cells have been run.
+    test_files : list
+        A list of paths to okgrade-compatible tests. Each test will be run
+        *after* all cells in the notebook have run.
+        
+    Returns
+    -------
+    instance of TestResults
+        A summary of the results of testing this notebook.
     """
     try:
         # Lots of notebooks call grade_notebook in them. These notebooks are then
@@ -65,6 +80,9 @@ def grade_notebook(notebook_path, test_files):
     except NameError:
         pass
 
+    if len(test_files) == 0:
+        raise ValueError("Empty list of test files given. You must give "
+                         "at least one test file to grade this notebook.")
     with open(notebook_path) as f:
         nb = json.load(f)
 
