@@ -19,6 +19,16 @@ def test_simple_execute():
     assert return_env['the_number_1'] == 1
     assert return_env['return_1']() == 1
 
+def test_line_continuation():
+    """
+    Test line continuations work in notebooks
+    """
+    with open(os.path.join(here, 'notebooks/line-continuations.ipynb')) as f:
+        nb = json.load(f)
+
+    return_env = execute_notebook(nb)
+    assert return_env['return_2']() == 2
+
 def test_okgrade_magic():
     """
     Test we can execute notebooks with injected global variables
