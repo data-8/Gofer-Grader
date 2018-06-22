@@ -1,4 +1,5 @@
 # okgrade
+# WARNING: EXTREMELY YOUNG & VOLATILE. DO NOT DEPEND ON!
 
 [![CircleCI](https://circleci.com/gh/grading/okgrade/tree/master.svg?style=shield)](https://circleci.com/gh/grading/okgrade/tree/master)
 [![codecov](https://codecov.io/gh/grading/okgrade/branch/master/graph/badge.svg)](https://codecov.io/gh/grading/okgrade)
