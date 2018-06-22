@@ -3,7 +3,7 @@ Backwards compatibility shim for old okpy API
 """
 import os
 import inspect
-from okgrade.ok import grade
+from okgrade.ok import check
 
 class Notebook:
     """
@@ -55,7 +55,7 @@ class Notebook:
             # code. If some other method is calling it, it should also use the
             # inspect trick to pass in its parents' global env.
             global_env = inspect.currentframe().f_back.f_globals
-        result = grade(path, global_env)
+        result = check(path, global_env)
         # We display the output if we're in IPython.
         # This keeps backwards compatibility with okpy's grade method
         # which dumped into into stdout.

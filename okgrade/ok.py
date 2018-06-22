@@ -113,16 +113,16 @@ def parse_ok_test(path):
     return TestSuite(path, tests, TestSuite.MUST_PASS)
 
 
-def grade(test_file_path, global_env=None):
+def check(test_file_path, global_env=None):
     """
-    Grade global_env against given test_file in oktest format
+    check global_env against given test_file in oktest format
 
     If global_env is none, the global environment of the calling
     function is used. The following two calls are equivalent:
 
-    grade('tests/q1.py')
+    check('tests/q1.py')
 
-    grade('tests/q1.py', globals())
+    check('tests/q1.py', globals())
 
     Returns a TestResult object.
     """
