@@ -6,6 +6,9 @@
 
 Simple library for interactive autograding.
 
+It used to be called `okgrade`, but was renamed to avoid too much confusion with
+[okpy](https://okpy.org)
+
 [See the gradememaybe documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
 
 ## What?
