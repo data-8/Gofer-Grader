@@ -1,9 +1,9 @@
-# Installing okgrade
+# Installing gradememaybe
 
-okgrade can be installed from [PyPI](https://pypi.org/project/okgrade).
+gradememaybe can be installed from git directly for now.
 
 ```bash
-pip install okgrade
+pip install git+https://github.com/grading/gradememaybe.git
 ```
 
 Since both this package and the [okpy](https://pypi.org/project/okpy/) package
@@ -12,7 +12,7 @@ in the same environment!
 
 ## Requirements
 
-okgrade currently requires Python 3.6. If required, we could also
+gradememaybe currently requires Python 3.6. If required, we could also
 support Python 3.5.
 
 Python 2.7 support is not planned.

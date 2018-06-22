@@ -1,12 +1,12 @@
-# okgrade
+# gradememaybe
 # WARNING: EXTREMELY YOUNG & VOLATILE. DO NOT DEPEND ON!
 
 [![CircleCI](https://circleci.com/gh/grading/okgrade/tree/master.svg?style=shield)](https://circleci.com/gh/grading/okgrade/tree/master)
 [![codecov](https://codecov.io/gh/grading/okgrade/branch/master/graph/badge.svg)](https://codecov.io/gh/grading/okgrade)
 
-A subset of [okpy](http://okpy.org/) that only does grading.
+Simple library for interactive autograding.
 
-[See the okgrade documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
+[See the gradememaybe documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
 
 ## What?
 
