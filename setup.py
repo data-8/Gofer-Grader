@@ -9,6 +9,9 @@ setup(
     description='Simple alternative to okpy for grading only',
     packages=find_packages(),
     install_requires=[
+        'vdom'
+    ],
+    dependency_links=[
         'git+https://github.com/nteract/vdom.git@b47d9fb '
     ]
 )
