@@ -7,5 +7,8 @@ setup(
     author='Yuvi Panda',
     author_email='yuvipanda@gmail.com',
     description='Simple alternative to okpy for grading only',
-    packages=find_packages()
+    packages=find_packages(),
+    install_requires=[
+        'git+https://github.com/nteract/vdom.git@b47d9fb '
+    ]
 )
