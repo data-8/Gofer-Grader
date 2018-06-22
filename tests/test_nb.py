@@ -2,9 +2,9 @@ import os
 import json
 import pytest
 from glob import glob
-from okgrade.ok import parse_ok_test
-from okgrade.suite import TestSuite
-from okgrade.notebook import execute_notebook, _global_anywhere, grade_notebook
+from gradememaybe.ok import parse_ok_test
+from gradememaybe.suite import TestSuite
+from gradememaybe.notebook import execute_notebook, _global_anywhere, grade_notebook
 
 here = os.path.dirname(__file__)
 
@@ -79,7 +79,7 @@ def test_global_anywhere():
         'LEVEL': 1
     }
 
-    l1_code = """from okgrade.notebook import _global_anywhere
+    l1_code = """from gradememaybe.notebook import _global_anywhere
 NEW_LEVEL = _global_anywhere('LEVEL')"""
 
     # This is 'one' level up

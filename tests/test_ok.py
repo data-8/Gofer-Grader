@@ -1,7 +1,7 @@
 import os
 
 from client.api.notebook import Notebook
-from okgrade.ok import parse_ok_test, OKDocTest
+from gradememaybe.ok import parse_ok_test, OKDocTest
 
 defined_variable = None
 seconds_in_a_minute = 60

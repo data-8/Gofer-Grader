@@ -1,9 +1,9 @@
 from contextlib import redirect_stderr, redirect_stdout
 import json
 import inspect
-from okgrade.result import TestResult
-from okgrade.suite import TestSuite
-from okgrade.utils import hide_outputs
+from .result import TestResult
+from .suite import TestSuite
+from .utils import hide_outputs
 
 try:
     from IPython.core.inputsplitter import IPythonInputSplitter
@@ -58,7 +58,7 @@ def grade_notebook(notebook_path, test_suite):
     """
     try:
         # Lots of notebooks call grade_notebook in them. These notebooks are then
-        # executed by okgrade - which will in-turn execute grade_notebook again!
+        # executed by gradememaybe - which will in-turn execute grade_notebook again!
         # This puts us in an infinite loop.
         # We use this sentinel to detect and break out of that loop.
         _global_anywhere('__OKGRADE__')

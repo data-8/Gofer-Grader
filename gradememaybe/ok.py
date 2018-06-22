@@ -4,9 +4,9 @@ import io
 from contextlib import redirect_stderr, redirect_stdout
 from textwrap import dedent
 
-from okgrade.suite import TestSuite
-from okgrade.result import TestResult
-from okgrade.utils import hide_outputs
+from .suite import TestSuite
+from .result import TestResult
+from .utils import hide_outputs
 from vdom.helpers import pre, strong, div
 
 class OKDocTest:

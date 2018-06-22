@@ -1,4 +1,4 @@
-from okgrade.result import TestResult
+from .result import TestResult
 from vdom.helpers import div, pre, strong
 
 class TestSuiteResult:

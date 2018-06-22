@@ -3,7 +3,7 @@ Backwards compatibility shim for old okpy API
 """
 import os
 import inspect
-from okgrade.ok import check
+from gradememaybe.ok import check
 
 class Notebook:
     """
@@ -44,7 +44,7 @@ class Notebook:
         """
         Legacy interface for grading a question in an environment.
 
-        Acts similar to okgrade.grade, but displays the response
+        Acts similar to gradememaybe.ok.check, but displays the response
         directly if running in a Jupyter Notebook / IPython terminal.
         This keeps it compatible with okpy's interface.
         """
