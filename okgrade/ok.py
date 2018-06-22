@@ -6,6 +6,7 @@ from textwrap import dedent
 
 from okgrade.suite import TestSuite
 from okgrade.result import TestResult
+from okgrade.utils import hide_outputs
 from vdom.helpers import pre, strong, div
 
 class OKDocTest:
@@ -51,7 +52,7 @@ class OKDocTest:
         doctestrunner = doctest.DocTestRunner(verbose=False)
 
         runresults = io.StringIO()
-        with redirect_stdout(runresults), redirect_stderr(runresults):
+        with redirect_stdout(runresults), redirect_stderr(runresults), hide_outputs():
             doctestrunner.run(test, clear_globs=False)
         with open('/dev/null', 'w') as f, redirect_stderr(f), redirect_stdout(f):
             result = doctestrunner.summarize(verbose=True)

@@ -3,6 +3,7 @@ import json
 import inspect
 from okgrade.result import TestResult
 from okgrade.suite import TestSuite
+from okgrade.utils import hide_outputs
 
 try:
     from IPython.core.inputsplitter import IPythonInputSplitter
@@ -17,23 +18,24 @@ def execute_notebook(nb, initial_env=None, ignore_errors=False):
 
     nb is passed in as a dictionary that's a parsed ipynb file
     """
-    if initial_env:
-        global_env = initial_env.copy()
-    else:
-        global_env = {}
-    for cell in nb['cells']:
-        if cell['cell_type'] == 'code':
-            # transform the input to executable Python
-            # FIXME: use appropriate IPython functions here
-            isp = IPythonInputSplitter(line_input_checker=False)
-            source = isp.transform_cell(''.join(cell['source']))
-            try:
-                with open('/dev/null', 'w') as f, redirect_stdout(f), redirect_stderr(f):
-                    exec(source, global_env)
-            except:
-                if not ignore_errors:
-                    raise
-    return global_env
+    with hide_outputs():
+        if initial_env:
+            global_env = initial_env.copy()
+        else:
+            global_env = {}
+        for cell in nb['cells']:
+            if cell['cell_type'] == 'code':
+                # transform the input to executable Python
+                # FIXME: use appropriate IPython functions here
+                isp = IPythonInputSplitter(line_input_checker=False)
+                source = isp.transform_cell(''.join(cell['source']))
+                try:
+                    with open('/dev/null', 'w') as f, redirect_stdout(f), redirect_stderr(f):
+                        exec(source, global_env)
+                except:
+                    if not ignore_errors:
+                        raise
+        return global_env
 
 def _global_anywhere(varname):
     """
