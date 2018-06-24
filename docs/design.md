@@ -55,3 +55,18 @@ requests.
 Getting a grade that seems wrong/unfair to you & unexplainable by your instructor is a deeply
 frustrating experience, and one we should avoid at all costs. It is the worst failure mode
 for `gradememaybe`, and related bugs should be considered critical.
+
+## Be as 'secure' as possible
+
+Any distribution that uses `gradememaybe` for grading should have multiple layers of context-specific
+security as needed. `gradememaybe` itself should be considered **untrusted**, since it is executing
+arbitrary user code in-process written in a very dynamic language. This is inherent to the problem
+of grading, however - the only way to be more secure is to rely exclusively on `stdin` and `stdout`
+of the executed program & parse those. This is the approach taken by most programming 'contest' sites
+like [TopCoder](https://www.topcoder.com/competitive-programming/), and trades off student/instructor friendliness for security.
+
+
+However, we can still try to make it harder for students & instructors to *accidentally* screw up
+their grading. Distributions should build enough layers of security to make it *impossible* for students to
+tamper with *other* students' grades, and `gradememaybe` should build in enough security to make it
+*hard* for students to tamper with their own grades.
