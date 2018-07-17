@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='gradememaybe',
-    version='0.5',
+    version='0.6',
     license='3-clause BSD',
     author='Yuvi Panda',
     author_email='yuvipanda@gmail.com',
