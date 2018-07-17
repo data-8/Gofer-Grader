@@ -7,7 +7,6 @@ from textwrap import dedent
 from .suite import TestSuite
 from .result import TestResult
 from .utils import hide_outputs
-from vdom.helpers import pre, strong, div
 
 class OKDocTest:
     """
@@ -30,8 +29,11 @@ class OKDocTest:
         )
 
     PLAIN_TEXT_HINT_TEMPLATE = dedent(r"""
+    Test {name} failed!
+
     Test code:
     {doctest_string}
+
     Test result:
     {runresults}
     """).strip()
@@ -49,7 +51,7 @@ class OKDocTest:
             self.doctest_string
         )
 
-        doctestrunner = doctest.DocTestRunner(verbose=False)
+        doctestrunner = doctest.DocTestRunner(verbose=True)
 
         runresults = io.StringIO()
         with redirect_stdout(runresults), redirect_stderr(runresults), hide_outputs():
@@ -63,13 +65,12 @@ class OKDocTest:
             passed = False
         hint = {}
         if not passed:
-
             hint = self.PLAIN_TEXT_HINT_TEMPLATE.format(
                 name=self.name,
                 doctest_string=dedent(self.doctest_string),
                 runresults=runresults.getvalue()
             )
-        return TestResult(self, passed, hint)
+        return TestResult(passed, hint)
 
 def parse_ok_test(path):
     """
@@ -110,7 +111,7 @@ def parse_ok_test(path):
             test_case['code']
         ))
 
-    return TestSuite(path, tests, TestSuite.MUST_PASS)
+    return TestSuite(tests, TestSuite.MUST_PASS)
 
 
 def check(test_file_path, global_env=None):
