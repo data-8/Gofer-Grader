@@ -1,8 +1,8 @@
 # gradememaybe
 # WARNING: EXTREMELY YOUNG & VOLATILE. DO NOT DEPEND ON!
 
-[![CircleCI](https://circleci.com/gh/grading/okgrade/tree/master.svg?style=shield)](https://circleci.com/gh/grading/okgrade/tree/master)
-[![codecov](https://codecov.io/gh/grading/okgrade/branch/master/graph/badge.svg)](https://codecov.io/gh/grading/okgrade)
+[![CircleCI](https://circleci.com/gh/data-8/gradememaybe/tree/master.svg?style=shield)](https://circleci.com/gh/data-8/gradememaybe/tree/master)
+[![codecov](https://codecov.io/gh/data-8/gradememaybe/branch/master/graph/badge.svg)](https://codecov.io/gh/data-8/gradememaybe)
 
 Simple library for interactive autograding.
 
