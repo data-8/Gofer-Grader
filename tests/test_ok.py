@@ -83,4 +83,4 @@ def test_make_test_fail():
     test = OKDocTest("test", docstring)
     tr = test({'h': "Hello"})
     assert tr.passed == False
-    assert "NameError: name 'g' is not defined" in tr.get_hint('text/plain')
+    assert "NameError: name 'g' is not defined" in tr.hint
