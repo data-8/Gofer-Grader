@@ -2,9 +2,8 @@ import os
 import json
 import pytest
 from glob import glob
-from gradememaybe.ok import parse_ok_test
-from gradememaybe.suite import TestSuite
-from gradememaybe.notebook import execute_notebook, _global_anywhere, grade_notebook
+from gradememaybe.ok import grade_notebook
+from gradememaybe.notebook import execute_notebook, _global_anywhere
 
 here = os.path.dirname(__file__)
 
@@ -63,7 +62,7 @@ def test_catch_error():
     """
     If code raises an error, we should catch it!
 
-    Raised exceptions also halt execution of all future cells. 
+    Raised exceptions also halt execution of all future cells.
     """
     with open(os.path.join(here, 'notebooks/partial-error.ipynb')) as f:
         nb = json.load(f)
@@ -93,15 +92,13 @@ def test_grade_notebook():
     """
     Test notebooks that grade at various percentages
     """
-    test_paths = glob(os.path.join(here, 'notebooks/grading/tests/q*.py'))
+    test_paths = os.path.join(here, 'notebooks/grading/tests/q*.py')
 
-    test_suite = TestSuite([parse_ok_test(p) for p in test_paths], TestSuite.PROPORTIONAL)
     full_grade_notebook = os.path.join(here, 'notebooks/grading/full-grade.ipynb')
-    assert grade_notebook(full_grade_notebook, test_suite).grade == 1
+    assert grade_notebook(full_grade_notebook, test_paths).grade == 1
 
     half_grade_notebook = os.path.join(here, 'notebooks/grading/half-grade.ipynb')
-    assert grade_notebook(half_grade_notebook, test_suite).grade == 0.5
+    assert grade_notebook(half_grade_notebook, test_paths).grade == 0.5
 
     zero_grade_notebook = os.path.join(here, 'notebooks/grading/zero-grade.ipynb')
-    assert grade_notebook(zero_grade_notebook, test_suite).grade == 0
-
+    assert grade_notebook(zero_grade_notebook, test_paths).grade == 0

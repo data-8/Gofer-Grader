@@ -1,14 +1,12 @@
 from contextlib import redirect_stderr, redirect_stdout
-import json
 import inspect
-from .result import TestResult
-from .suite import TestSuite
 from .utils import hide_outputs
 
 try:
     from IPython.core.inputsplitter import IPythonInputSplitter
 except ImportError:
     raise ImportError('IPython needs to be installed for notebook grading')
+
 
 def execute_notebook(nb, initial_env=None, ignore_errors=False):
     """
@@ -50,31 +48,3 @@ def _global_anywhere(varname):
             return cur_frame.f_globals[varname]
         cur_frame = cur_frame.f_back
     raise NameError(f'{varname} not found in any globals in the stack')
-
-
-def grade_notebook(notebook_path, test_suite):
-    """
-    Grade a notebook file & return grade
-    """
-    try:
-        # Lots of notebooks call grade_notebook in them. These notebooks are then
-        # executed by gradememaybe - which will in-turn execute grade_notebook again!
-        # This puts us in an infinite loop.
-        # We use this sentinel to detect and break out of that loop.
-        _global_anywhere('__OKGRADE__')
-        # FIXME: Do something else here?
-        return None
-    except NameError:
-        pass
-
-    with open(notebook_path) as f:
-        nb = json.load(f)
-
-    initial_env = {
-        # Set this to prevent recursive executions!
-        '__OKGRADE__': True
-    }
-
-    global_env = execute_notebook(nb, initial_env, ignore_errors=True)
-
-    return test_suite.run(global_env)
