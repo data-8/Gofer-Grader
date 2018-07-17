@@ -11,8 +11,5 @@ setup(
     install_requires=[
         'jinja2',
         'pygments'
-    ],
-    dependency_links=[
-        'git+https://github.com/nteract/vdom.git@b47d9fb '
     ]
 )
