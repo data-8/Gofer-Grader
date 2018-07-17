@@ -1,7 +1,7 @@
 import os
 
 from client.api.notebook import Notebook
-from gradememaybe.ok import parse_ok_test, OKDocTest
+from gradememaybe.ok import OKTests, run_doctest
 
 defined_variable = None
 seconds_in_a_minute = 60
@@ -24,7 +24,7 @@ def test_ok_parse_simple_valid():
     here = os.path.dirname(__file__)
 
     # This should not raise any AssertionErrors
-    test_suite = parse_ok_test(os.path.join(here, 'oktests/tests/simple_valid.py'))
+    test_suite = OKTests([os.path.join(here, 'oktests/tests/simple_valid.py')])
     global_env = {}
 
     resp = test_suite.run(global_env)
@@ -34,17 +34,19 @@ def test_ok_parse_simple_valid():
     global_env['defined_variable'] = None
 
     # First test should pass now, but second should fail
+    # This should cause the whole thing to fail
     resp = test_suite.run(global_env)
     assert resp.grade == 0
-    assert resp.results[0].passed
-    assert not resp.results[1].passed
+    assert len(resp.passed_tests) == 0
+    assert len(resp.failed_tests) == 1
+    assert "NameError: name 'seconds_in_a_minute' is not defined" in resp.failed_tests[0][1]
 
     # Both tests should pass now
     global_env['seconds_in_a_minute'] = 60
     resp = test_suite.run(global_env)
     assert resp.grade == 1
-    assert resp.results[0].passed
-    assert resp.results[1].passed
+    assert len(resp.passed_tests) == 1
+    assert len(resp.failed_tests) == 0
 
 
 def test_make_test_pass():
@@ -55,9 +57,8 @@ def test_make_test_pass():
     >>> g == "Hello"
     True
     """
-    test = OKDocTest("test", docstring)
-    result = test({'g': "Hello"})
-    assert result.passed
+    passed, _ = run_doctest('test', docstring, {'g': "Hello"})
+    assert passed
 
 def test_make_test_partial():
     """
@@ -67,10 +68,10 @@ def test_make_test_partial():
     >>> g == "Hello"
     True
     >>> g == "Not Hello"
+    True
     """
-    test = OKDocTest("test", docstring)
-    result = test({'g': "Hello"})
-    assert result.passed == False
+    passed, _ = run_doctest('test', docstring, {'g': 'hello'})
+    assert not passed
 
 def test_make_test_fail():
     """
@@ -80,7 +81,6 @@ def test_make_test_fail():
     >>> g == "Hello"
     True
     """
-    test = OKDocTest("test", docstring)
-    tr = test({'h': "Hello"})
-    assert tr.passed == False
-    assert "NameError: name 'g' is not defined" in tr.get_hint('text/plain')
+    passed, hint = run_doctest('test', docstring, {'h': "hello"})
+    assert not passed
+    assert "NameError: name 'g' is not defined" in hint
