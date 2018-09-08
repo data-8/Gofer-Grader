@@ -3,6 +3,8 @@ import inspect
 import io
 import json
 import glob
+import random
+import string
 from contextlib import redirect_stderr, redirect_stdout
 from jinja2 import Template
 from textwrap import dedent
@@ -12,6 +14,7 @@ from .utils import hide_outputs
 from pygments import highlight
 from pygments.lexers import PythonConsoleLexer
 from pygments.formatters import HtmlFormatter
+
 
 
 def run_doctest(name, doctest_string, global_environment):
@@ -192,6 +195,12 @@ class OKTestsResult:
             include_grade=self.include_grade
         )
 
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    """Used to generate a dynamic variable name for grading functions"""
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
 def grade_notebook(notebook_path, tests_glob):
     """
     Grade a notebook file & return grade
@@ -210,16 +219,23 @@ def grade_notebook(notebook_path, tests_glob):
     with open(notebook_path) as f:
         nb = json.load(f)
 
+    secret = id_generator()
+    results_array = "check_results_{}".format(secret)
     initial_env = {
         # Set this to prevent recursive executions!
-        '__OKGRADE__': True
+        '__OKGRADE__': True,
+        results_array: []
     }
 
-    global_env = execute_notebook(nb, initial_env, ignore_errors=True)
+    global_env = execute_notebook(nb, secret, initial_env, ignore_errors=True)
 
-    tests = OKTests(glob.glob(tests_glob))
+    # TODO: this logic fails when there are hidden tests
 
-    return tests.run(global_env, include_grade=True)
+    test_results = global_env[results_array]
+    # avoid divide by zero error if there are no tests
+    score = sum([r.grade for r in test_results])/max(len(test_results), 1)
+
+    return score
 
 def check(test_file_path, global_env=None):
     """
