@@ -43,7 +43,7 @@ class CheckCallWrapper(ast.NodeTransformer):
         self.secret = secret
 
     def node_constructor(self, expression):
-        """Creates node that wraps expression in a list append call"""
+        """Creates node that wraps expression in a list (check_results_XX) append call"""
         args = [expression]
         func = ast.Attribute(attr='append',
                              value=ast.Name(id='check_results_{}'.format(self.secret),

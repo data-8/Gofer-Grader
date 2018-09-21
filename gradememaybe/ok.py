@@ -134,7 +134,8 @@ class OKTest:
 
 class OKTests:
     def __init__(self, test_paths):
-        self.tests = [OKTest.from_file(path) for path in test_paths]
+        self.paths = test_paths
+        self.tests = [OKTest.from_file(path) for path in self.paths]
 
     def run(self, global_environment, include_grade=True):
         passed_tests = []
@@ -147,7 +148,9 @@ class OKTests:
                 failed_tests.append((t, hint))
 
         grade = len(passed_tests) / len(self.tests)
-        return OKTestsResult(grade, self.tests, passed_tests, failed_tests, include_grade)
+
+        return OKTestsResult(grade, self.paths, self.tests, passed_tests,
+                             failed_tests, include_grade)
 
 
 class OKTestsResult:
@@ -179,8 +182,9 @@ class OKTestsResult:
     """)
 
 
-    def __init__(self, grade, tests, passed_tests, failed_tests, include_grade=True):
+    def __init__(self, grade, paths, tests, passed_tests, failed_tests, include_grade=True):
         self.grade = grade
+        self.paths = paths
         self.tests = tests
         self.passed_tests = passed_tests
         self.failed_tests = failed_tests
@@ -201,7 +205,7 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def grade_notebook(notebook_path, tests_glob):
+def grade_notebook(notebook_path, tests_glob=None):
     """
     Grade a notebook file & return grade
     """
@@ -210,7 +214,7 @@ def grade_notebook(notebook_path, tests_glob):
         # executed by gradememaybe - which will in-turn execute grade_notebook again!
         # This puts us in an infinite loop.
         # We use this sentinel to detect and break out of that loop.
-        _global_anywhere('__OKGRADE__')
+        _global_anywhere('__GOFERGRADE__')
         # FIXME: Do something else here?
         return None
     except NameError:
@@ -223,19 +227,31 @@ def grade_notebook(notebook_path, tests_glob):
     results_array = "check_results_{}".format(secret)
     initial_env = {
         # Set this to prevent recursive executions!
-        '__OKGRADE__': True,
+        '__GOFERGRADE__': True,
         results_array: []
     }
 
     global_env = execute_notebook(nb, secret, initial_env, ignore_errors=True)
 
-    # TODO: this logic fails when there are hidden tests
-
     test_results = global_env[results_array]
+
+    # TODO: this logic fails when there are hidden tests (consider adding 'check's here)
+    if tests_glob:
+        extra_tests = [OKTests([t]) for t in sorted(tests_glob)]
+        extra_results = [t.run(global_env, include_grade=False) for t in extra_tests]
+        # needs to be hashable type for set
+        tested_set = set([tuple(r.paths) for r in test_results])
+        extra_results = [er for er in extra_results if tuple(er.paths) not in tested_set]
+        test_results += extra_results
+
     # avoid divide by zero error if there are no tests
     score = sum([r.grade for r in test_results])/max(len(test_results), 1)
 
+    for i, result in enumerate(test_results):
+        print("Question {}:".format(i+1),)
+        display(result)
     return score
+
 
 def check(test_file_path, global_env=None):
     """
