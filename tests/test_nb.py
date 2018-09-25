@@ -35,7 +35,7 @@ def test_okgrade_magic():
     with open(os.path.join(here, 'notebooks/injected-magic.ipynb')) as f:
         nb = json.load(f)
 
-    return_env = execute_notebook(nb, {'__OKGRADE__': True})
+    return_env = execute_notebook(nb, initial_env={'__OKGRADE__': True})
 
     assert return_env['ok_grade_present'] == True
 

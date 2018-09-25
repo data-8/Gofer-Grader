@@ -62,7 +62,7 @@ class CheckCallWrapper(ast.NodeTransformer):
             return node
 
 
-def execute_notebook(nb, secret, initial_env=None, ignore_errors=False):
+def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False):
     """
     Execute notebook & return the global environment that results from execution.
 
