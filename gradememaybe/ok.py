@@ -239,9 +239,8 @@ def grade_notebook(notebook_path, tests_glob=None):
     if tests_glob:
         extra_tests = [OKTests([t]) for t in sorted(tests_glob)]
         extra_results = [t.run(global_env, include_grade=False) for t in extra_tests]
-        # needs to be hashable type for set
-        tested_set = set([tuple(r.paths) for r in test_results])
-        extra_results = [er for er in extra_results if tuple(er.paths) not in tested_set]
+        tested_set = [r.paths for r in test_results]
+        extra_results = [er for er in extra_results if er.paths not in tested_set]
         test_results += extra_results
 
     # avoid divide by zero error if there are no tests
