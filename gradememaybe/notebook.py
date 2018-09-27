@@ -80,17 +80,27 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
         else:
             global_env = {}
         source = ""
+
+        # Before rewriting AST, find cells of code that generate errors.
+        # One round of execution is done beforehand to mimic the Jupyter notebook style of running
+        # (e.g. code runs up to the point of execution).
+        # The reason this is workaround is introduced is because once the
+        # source code is parsed into an AST, there is no sense of local cells
+
         for cell in nb['cells']:
             if cell['cell_type'] == 'code':
                 # transform the input to executable Python
                 # FIXME: use appropriate IPython functions here
                 isp = IPythonInputSplitter(line_input_checker=False)
-                source += isp.transform_cell(''.join(cell['source']))
-        try:
-            tree = ast.parse(source)
-        except:
-            if not ignore_errors:
-                raise
+                try:
+                    cell_source = isp.transform_cell(''.join(cell['source']))
+                    exec(cell_source, global_env)
+                    source += cell_source
+                except:
+                    if not ignore_errors:
+                        raise
+
+        tree = ast.parse(source)
         if find_check_assignment(tree) or find_check_definition(tree):
             # an empty global_env will fail all the tests
             return global_env
