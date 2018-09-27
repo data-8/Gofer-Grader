@@ -235,7 +235,8 @@ def grade_notebook(notebook_path, tests_glob=None):
 
     test_results = global_env[results_array]
 
-    # TODO: this logic fails when there are hidden tests (consider adding 'check's here)
+    # Check for tests which were not included in the notebook and specified by tests_globs
+    # Allows instructors to run notebooks with additional tests not accessible to user
     if tests_glob:
         extra_tests = [OKTests([t]) for t in sorted(tests_glob)]
         extra_results = [t.run(global_env, include_grade=False) for t in extra_tests]
@@ -246,9 +247,19 @@ def grade_notebook(notebook_path, tests_glob=None):
     # avoid divide by zero error if there are no tests
     score = sum([r.grade for r in test_results])/max(len(test_results), 1)
 
+    # If within an IPython or Jupyter environment, display hints
+    display_defined = False
+    try:
+        __IPYTHON__
+        display_defined = True
+    except NameError:
+        pass
     for i, result in enumerate(test_results):
         print("Question {}:".format(i+1),)
-        display(result)
+        if display_defined:
+            display(result)
+        else:
+            print(result)
     return score
 
 
