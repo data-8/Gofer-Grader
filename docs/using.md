@@ -1,4 +1,4 @@
-# Using gradememaybe
+# Using Gofer Grader
 
 1. Write your tests in [ok test format](ok-test-format.html),
    and distribute them the same way you distribute lab notebooks
@@ -7,7 +7,7 @@
    the `check` function on top:
 
    ```python
-   from gradememaybe.ok import check
+   from gofer.ok import check
    ```
 
 3. At various points, insert `check cells`, like:
@@ -40,6 +40,6 @@ A small shim is provided so this interface will continue
 to not error!
 
 `ok.auth` and `ok.submit` are empty methods that do
-nothing. `ok.grade` does the same thing as `gradememaybe.ok.check`,
+nothing. `ok.grade` does the same thing as `gofer.ok.check`,
 but also displays the output if run inside an IPython
 environment, to mimic okpy's behavior.

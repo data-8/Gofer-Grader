@@ -1,15 +1,13 @@
 # gradememaybe
-# WARNING: EXTREMELY YOUNG & VOLATILE. DO NOT DEPEND ON!
 
 [![CircleCI](https://circleci.com/gh/data-8/gradememaybe/tree/master.svg?style=shield)](https://circleci.com/gh/data-8/gradememaybe/tree/master)
 [![codecov](https://codecov.io/gh/data-8/gradememaybe/branch/master/graph/badge.svg)](https://codecov.io/gh/data-8/gradememaybe)
 
 Simple library for interactive autograding.
 
-It used to be called `okgrade`, but was renamed to avoid too much confusion with
-[okpy](https://okpy.org)
+Previous names include `gradememaybe` and `okgrade`.
 
-[See the gradememaybe documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
+[See the Gofer Grader documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
 
 ## What?
 
@@ -44,6 +42,13 @@ installation.
 
 This project is tightly scoped to only do automatic grading, and nothing
 else.
+
+## Caveats
+
+Gofer executes arbitrary user code within the testing environment, rather than
+parsing standard out. While there are certain measures implemented to make it
+more difficult for users to maliciously modify the tests, it is not 100%
+possible to secure against these attacks since Python exposes all the objects.
 
 ## Credit
 

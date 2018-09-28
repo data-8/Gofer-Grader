@@ -1,6 +1,6 @@
-# Installing gradememaybe
+# Installing Gofer Grader
 
-gradememaybe can be installed from git directly for now.
+Gofer Grader can be installed from git directly for now.
 
 ```bash
 pip install git+https://github.com/grading/gradememaybe.git
