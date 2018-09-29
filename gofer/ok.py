@@ -198,10 +198,10 @@ def grade_notebook(notebook_path, tests_glob):
     """
     try:
         # Lots of notebooks call grade_notebook in them. These notebooks are then
-        # executed by gradememaybe - which will in-turn execute grade_notebook again!
+        # executed by gofer - which will in-turn execute grade_notebook again!
         # This puts us in an infinite loop.
         # We use this sentinel to detect and break out of that loop.
-        _global_anywhere('__OKGRADE__')
+        _global_anywhere('__GOFER_GRADER__')
         # FIXME: Do something else here?
         return None
     except NameError:
@@ -212,7 +212,7 @@ def grade_notebook(notebook_path, tests_glob):
 
     initial_env = {
         # Set this to prevent recursive executions!
-        '__OKGRADE__': True
+        '__GOFER_GRADER__': True
     }
 
     global_env = execute_notebook(nb, initial_env, ignore_errors=True)

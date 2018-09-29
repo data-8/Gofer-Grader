@@ -2,8 +2,8 @@ import os
 import json
 import pytest
 from glob import glob
-from gradememaybe.ok import grade_notebook
-from gradememaybe.notebook import execute_notebook, _global_anywhere
+from gofer.ok import grade_notebook
+from gofer.notebook import execute_notebook, _global_anywhere
 
 here = os.path.dirname(__file__)
 

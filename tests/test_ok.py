@@ -1,7 +1,7 @@
 import os
 
 from client.api.notebook import Notebook
-from gradememaybe.ok import OKTests, run_doctest
+from gofer.ok import OKTests, run_doctest
 
 defined_variable = None
 seconds_in_a_minute = 60

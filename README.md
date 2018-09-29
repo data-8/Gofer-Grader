@@ -1,8 +1,7 @@
-# gradememaybe
-# WARNING: EXTREMELY YOUNG & VOLATILE. DO NOT DEPEND ON!
+# Gofer Grader
 
-[![CircleCI](https://circleci.com/gh/data-8/gradememaybe/tree/master.svg?style=shield)](https://circleci.com/gh/data-8/gradememaybe/tree/master)
-[![codecov](https://codecov.io/gh/data-8/gradememaybe/branch/master/graph/badge.svg)](https://codecov.io/gh/data-8/gradememaybe)
+[![CircleCI](https://circleci.com/gh/data-8/Gofer-Grader/tree/master.svg?style=shield)](https://circleci.com/gh/data-8/Gofer-Grader/tree/master)
+[![codecov](https://codecov.io/gh/data-8/Gofer-Grader/branch/master/graph/badge.svg)](https://codecov.io/gh/data-8/Gofer-Grader)
 
 Simple library for interactive autograding.
 
