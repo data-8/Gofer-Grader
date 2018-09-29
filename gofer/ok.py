@@ -3,6 +3,8 @@ import inspect
 import io
 import json
 import glob
+import random
+import string
 from contextlib import redirect_stderr, redirect_stdout
 from jinja2 import Template
 from textwrap import dedent
@@ -12,6 +14,7 @@ from .utils import hide_outputs
 from pygments import highlight
 from pygments.lexers import PythonConsoleLexer
 from pygments.formatters import HtmlFormatter
+
 
 
 def run_doctest(name, doctest_string, global_environment):
@@ -131,7 +134,8 @@ class OKTest:
 
 class OKTests:
     def __init__(self, test_paths):
-        self.tests = [OKTest.from_file(path) for path in test_paths]
+        self.paths = test_paths
+        self.tests = [OKTest.from_file(path) for path in self.paths]
 
     def run(self, global_environment, include_grade=True):
         passed_tests = []
@@ -144,7 +148,9 @@ class OKTests:
                 failed_tests.append((t, hint))
 
         grade = len(passed_tests) / len(self.tests)
-        return OKTestsResult(grade, self.tests, passed_tests, failed_tests, include_grade)
+
+        return OKTestsResult(grade, self.paths, self.tests, passed_tests,
+                             failed_tests, include_grade)
 
 
 class OKTestsResult:
@@ -176,8 +182,9 @@ class OKTestsResult:
     """)
 
 
-    def __init__(self, grade, tests, passed_tests, failed_tests, include_grade=True):
+    def __init__(self, grade, paths, tests, passed_tests, failed_tests, include_grade=True):
         self.grade = grade
+        self.paths = paths
         self.tests = tests
         self.passed_tests = passed_tests
         self.failed_tests = failed_tests
@@ -192,7 +199,13 @@ class OKTestsResult:
             include_grade=self.include_grade
         )
 
-def grade_notebook(notebook_path, tests_glob):
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    """Used to generate a dynamic variable name for grading functions"""
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def grade_notebook(notebook_path, tests_glob=None):
     """
     Grade a notebook file & return grade
     """
@@ -210,16 +223,46 @@ def grade_notebook(notebook_path, tests_glob):
     with open(notebook_path) as f:
         nb = json.load(f)
 
+    secret = id_generator()
+    results_array = "check_results_{}".format(secret)
     initial_env = {
         # Set this to prevent recursive executions!
         '__GOFER_GRADER__': True
+        '__GOFERGRADE__': True,
+        results_array: []
     }
 
-    global_env = execute_notebook(nb, initial_env, ignore_errors=True)
+    global_env = execute_notebook(nb, secret, initial_env, ignore_errors=True)
 
-    tests = OKTests(glob.glob(tests_glob))
+    test_results = global_env[results_array]
 
-    return tests.run(global_env, include_grade=True)
+    # Check for tests which were not included in the notebook and specified by tests_globs
+    # Allows instructors to run notebooks with additional tests not accessible to user
+    if tests_glob:
+        extra_tests = [OKTests([t]) for t in sorted(tests_glob)]
+        extra_results = [t.run(global_env, include_grade=False) for t in extra_tests]
+        tested_set = [r.paths for r in test_results]
+        extra_results = [er for er in extra_results if er.paths not in tested_set]
+        test_results += extra_results
+
+    # avoid divide by zero error if there are no tests
+    score = sum([r.grade for r in test_results])/max(len(test_results), 1)
+
+    # If within an IPython or Jupyter environment, display hints
+    display_defined = False
+    try:
+        __IPYTHON__
+        display_defined = True
+    except NameError:
+        pass
+    for i, result in enumerate(test_results):
+        print("Question {}:".format(i+1),)
+        if display_defined:
+            display(result)
+        else:
+            print(result)
+    return score
+
 
 def check(test_file_path, global_env=None):
     """

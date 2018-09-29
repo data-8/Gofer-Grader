@@ -1,9 +1,6 @@
-# gradememaybe
+# Gofer Grader
 
-`gradememaybe` is a small library for autograding Jupyter notebooks & python files.
-
-It used to be called `okgrade`, but was renamed to avoid too much confusion with
-[okpy](https://okpy.org)
+Gofer Grader is a small library for autograding Jupyter notebooks & python files.
 
 ## What is autograding?
 

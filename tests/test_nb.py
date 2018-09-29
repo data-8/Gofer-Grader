@@ -35,7 +35,7 @@ def test_okgrade_magic():
     with open(os.path.join(here, 'notebooks/injected-magic.ipynb')) as f:
         nb = json.load(f)
 
-    return_env = execute_notebook(nb, {'__OKGRADE__': True})
+    return_env = execute_notebook(nb, initial_env={'__OKGRADE__': True})
 
     assert return_env['ok_grade_present'] == True
 
@@ -95,10 +95,10 @@ def test_grade_notebook():
     test_paths = os.path.join(here, 'notebooks/grading/tests/q*.py')
 
     full_grade_notebook = os.path.join(here, 'notebooks/grading/full-grade.ipynb')
-    assert grade_notebook(full_grade_notebook, test_paths).grade == 1
+    assert grade_notebook(full_grade_notebook, glob(test_paths)) == 1
 
     half_grade_notebook = os.path.join(here, 'notebooks/grading/half-grade.ipynb')
-    assert grade_notebook(half_grade_notebook, test_paths).grade == 0.5
+    assert grade_notebook(half_grade_notebook, glob(test_paths)) == 0.5
 
     zero_grade_notebook = os.path.join(here, 'notebooks/grading/zero-grade.ipynb')
-    assert grade_notebook(zero_grade_notebook, test_paths).grade == 0
+    assert grade_notebook(zero_grade_notebook, glob(test_paths)) == 0

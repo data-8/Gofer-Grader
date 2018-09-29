@@ -1,6 +1,7 @@
 from contextlib import redirect_stderr, redirect_stdout
 import inspect
 from .utils import hide_outputs
+import ast
 
 try:
     from IPython.core.inputsplitter import IPythonInputSplitter
@@ -8,11 +9,68 @@ except ImportError:
     raise ImportError('IPython needs to be installed for notebook grading')
 
 
-def execute_notebook(nb, initial_env=None, ignore_errors=False):
+def find_check_definition(tree):
+    """Given an AST for a source, check for definitions of `check` function
+
+    Returns True if such a definition is found, False otherwise."""
+    for stmt in ast.walk(tree):
+        if not isinstance(stmt, ast.FunctionDef):
+            continue
+        if stmt.name == 'check':
+            return True
+    return False
+
+
+def find_check_assignment(tree):
+    """Given an AST for a source, check for variable redefinition of `check`
+
+    Returns True if such a definition is found, False otherwise."""
+    for stmt in ast.walk(tree):
+        if not isinstance(stmt, ast.Assign):
+            continue
+        target_names = [target.id for target in stmt.targets]
+        if 'check' in target_names:
+            return True
+    return False
+
+
+class CheckCallWrapper(ast.NodeTransformer):
+    """NodeTransformer visits and replaces nodes in place.
+    CheckCallWrapper finds nodes with check(..) and replaces it with
+    check_results_<secret>(check(...))"""
+
+    def __init__(self, secret):
+        self.secret = secret
+
+    def node_constructor(self, expression):
+        """Creates node that wraps expression in a list (check_results_XX) append call"""
+        args = [expression]
+        func = ast.Attribute(attr='append',
+                             value=ast.Name(id='check_results_{}'.format(self.secret),
+                                            ctx=ast.Load()),
+                             ctx=ast.Load(),
+                             keywords=[])
+        return ast.Call(func=func, args=args, keywords=[])
+
+    def visit_Call(self, node):
+        # test case is if check is .check
+        if isinstance(node.func, ast.Attribute):
+            return node
+        elif node.func.id == 'check':
+            return self.node_constructor(node)
+        else:
+            return node
+
+
+def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False):
     """
     Execute notebook & return the global environment that results from execution.
 
+    TODO: write a note about the injection of check_results
+
     If ignore_errors is True, exceptions are swallowed.
+
+    secret contains random digits so check_results and check are not easily modifiable
 
     nb is passed in as a dictionary that's a parsed ipynb file
     """
@@ -21,18 +79,44 @@ def execute_notebook(nb, initial_env=None, ignore_errors=False):
             global_env = initial_env.copy()
         else:
             global_env = {}
+        source = ""
+
+        # Before rewriting AST, find cells of code that generate errors.
+        # One round of execution is done beforehand to mimic the Jupyter notebook style of running
+        # (e.g. code runs up to the point of execution).
+        # The reason this is workaround is introduced is because once the
+        # source code is parsed into an AST, there is no sense of local cells
+
         for cell in nb['cells']:
             if cell['cell_type'] == 'code':
                 # transform the input to executable Python
                 # FIXME: use appropriate IPython functions here
                 isp = IPythonInputSplitter(line_input_checker=False)
-                source = isp.transform_cell(''.join(cell['source']))
                 try:
-                    with open('/dev/null', 'w') as f, redirect_stdout(f), redirect_stderr(f):
-                        exec(source, global_env)
+                    cell_source = isp.transform_cell(''.join(cell['source']))
+                    exec(cell_source, global_env)
+                    source += cell_source
                 except:
                     if not ignore_errors:
                         raise
+
+        tree = ast.parse(source)
+        if find_check_assignment(tree) or find_check_definition(tree):
+            # an empty global_env will fail all the tests
+            return global_env
+
+        # wrap check(..) calls into a check_results_X.append(check(..))
+        transformer = CheckCallWrapper(secret)
+        tree = transformer.visit(tree)
+        ast.fix_missing_locations(tree)
+
+        cleaned_source = compile(tree, filename="nb-ast", mode="exec")
+        try:
+            with open('/dev/null', 'w') as f, redirect_stdout(f), redirect_stderr(f):
+                exec(cleaned_source, global_env)
+        except:
+            if not ignore_errors:
+                raise
         return global_env
 
 def _global_anywhere(varname):
