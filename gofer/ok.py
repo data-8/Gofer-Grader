@@ -227,7 +227,7 @@ def grade_notebook(notebook_path, tests_glob=None):
     results_array = "check_results_{}".format(secret)
     initial_env = {
         # Set this to prevent recursive executions!
-        '__GOFER_GRADER__': True
+        '__GOFER_GRADER__': True,
         '__GOFERGRADE__': True,
         results_array: []
     }
