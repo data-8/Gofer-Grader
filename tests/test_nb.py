@@ -35,9 +35,9 @@ def test_okgrade_magic():
     with open(os.path.join(here, 'notebooks/injected-magic.ipynb')) as f:
         nb = json.load(f)
 
-    return_env = execute_notebook(nb, initial_env={'__OKGRADE__': True})
+    return_env = execute_notebook(nb, initial_env={'__GOFER_GRADER__': True})
 
-    assert return_env['ok_grade_present'] == True
+    assert return_env['gofer_grader_present'] == True
 
 def test_ignore_error():
     """
@@ -78,7 +78,7 @@ def test_global_anywhere():
         'LEVEL': 1
     }
 
-    l1_code = """from gradememaybe.notebook import _global_anywhere
+    l1_code = """from gofer.notebook import _global_anywhere
 NEW_LEVEL = _global_anywhere('LEVEL')"""
 
     # This is 'one' level up
