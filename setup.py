@@ -1,12 +1,12 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='gradememaybe',
-    version='0.6',
+    name='gofer_grader',
+    version='1.0',
     license='3-clause BSD',
-    author='Yuvi Panda',
-    author_email='yuvipanda@gmail.com',
-    description='Simple alternative to okpy for grading only',
+    author='Vincent Su',
+    author_email='vipasu@berkeley.edu',
+    description='Lightweight autograder for python files and notebooks',
     packages=find_packages(),
     install_requires=[
         'jinja2',
