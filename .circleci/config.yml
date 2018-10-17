@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6.1
-      
+
     working_directory: ~/repo
 
     steps:
@@ -28,12 +28,12 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
-        
+
       - run:
           name: run tests
           command: |
             . venv/bin/activate
-            py.test --cov=gradememaybe tests/
+            py.test --cov=gofer tests/
 
       - run:
           name: post code coverage stats
