@@ -3,7 +3,7 @@ Backwards compatibility shim for old okpy API
 """
 import os
 import inspect
-from gradememaybe.ok import check
+from gofer.ok import check
 
 class Notebook:
     """
