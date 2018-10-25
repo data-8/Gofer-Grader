@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='gofer_grader',
-    version='1.0',
+    version='1.0.1',
     license='3-clause BSD',
     author='Vincent Su',
     author_email='vipasu@berkeley.edu',
