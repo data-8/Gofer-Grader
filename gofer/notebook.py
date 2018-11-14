@@ -31,7 +31,7 @@ def find_check_assignment(tree):
         # check id for tuple target
         target_names = []
         for target in stmt.targets:
-            if isinstance(target, tuple):
+            if type(target) is tuple:
                 target_names += [t.id for t in target]
             else:
                 target_names.append(target.id)
@@ -99,7 +99,12 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
                 # FIXME: use appropriate IPython functions here
                 isp = IPythonInputSplitter(line_input_checker=False)
                 try:
-                    cell_source = isp.transform_cell(''.join(cell['source']))
+                    code_lines = []
+                    for line in cell['source']:
+                        # Filter out ipython magic commands
+                        if not line.startswith('%'):
+                            code_lines.append(line)
+                    cell_source = isp.transform_cell(''.join(code_lines))
                     exec(cell_source, global_env)
                     source += cell_source
                 except:
