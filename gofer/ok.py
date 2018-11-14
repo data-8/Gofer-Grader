@@ -162,7 +162,7 @@ class OKTestsResult:
     <strong>Grade: {{ grade }}</strong>
     {% endif %}
     {% if grade == 1.0 %}
-        <p>All {{ tests|length }} tests passed! Full grade.</p>
+        <p>All tests passed! Full grade.</p>
     {% else %}
         <p>{{ passed_tests|length }} of {{ tests|length }} tests passed</p>
         {% if passed_tests %}

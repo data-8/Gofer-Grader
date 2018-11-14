@@ -28,7 +28,13 @@ def find_check_assignment(tree):
     for stmt in ast.walk(tree):
         if not isinstance(stmt, ast.Assign):
             continue
-        target_names = [target.id for target in stmt.targets]
+        # check id for tuple target
+        target_names = []
+        for target in stmt.targets:
+            if isinstance(target, tuple):
+                target_names += [t.id for t in target]
+            else:
+                target_names.append(target.id)
         if 'check' in target_names:
             return True
     return False
