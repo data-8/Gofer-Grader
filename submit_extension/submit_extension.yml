@@ -1,0 +1,10 @@
+Type: Jupyter Notebook Extension
+Compatibility: 4.x, 5.x
+Name: Submit to Gofer
+Main: submit_extension.js
+Icon: gg_ps-11.png
+Link: README.md
+Description: Extension for submitting assignments
+Parameters:
+- name: thisextension.my_config_value
+  description: Sends ipynb file to be graded by gofer
