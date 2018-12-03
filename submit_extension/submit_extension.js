@@ -1,7 +1,8 @@
 // file submit_extension/main.js
 
 // Needs to be changed on a class by class basis
-grading_url = 'http://localhost:8000/services/gofer_nb/'
+
+grading_url = '/services/gofer_nb/'
 define([
     'base/js/namespace'
 ], function(
