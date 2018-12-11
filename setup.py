@@ -10,6 +10,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'jinja2',
-        'pygments'
+        'pygments',
+        'tornado'
     ]
 )
