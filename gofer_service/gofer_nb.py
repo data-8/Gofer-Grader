@@ -5,6 +5,8 @@ import tornado.escape
 import tornado.options
 import os
 import json
+import asyncio
+from grade_lab import grade_lab
 from gofer.ok import grade_notebook, id_generator
 
 from jupyterhub.services.auth import HubAuthenticated
@@ -17,12 +19,12 @@ class GoferHandler(HubAuthenticated, tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def get(self):
-        self.write('Hello World')
+        self.write("This is a post only page. You probably shouldn't be here!")
         self.finish()
 
     @tornado.web.asynchronous
     def post(self):
-        """For grading submission"""
+        """For grading submission, accept json notebook of submission"""
         if not self.current_user:
             self.get_current_user()
         req_data = tornado.escape.json_decode(self.request.body)
@@ -32,10 +34,10 @@ class GoferHandler(HubAuthenticated, tornado.web.RequestHandler):
         test_dir = test_dirs[assignment]
         os.chdir(test_dir)
         # save notebook to this dir
-        # careful not to overwrite
         fname = 'tmp.' + id_generator() + '.ipynb'
         while os.path.isfile(fname):
-            fname = id_generator() + '.ipynb'
+            # Generate new name is file exists
+            fname = 'tmp.' + id_generator() + '.ipynb'
         with open(fname, 'w') as outfile:
             json.dump(notebook, outfile)
         # execute notebook from this directory
