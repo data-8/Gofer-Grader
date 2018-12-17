@@ -11,7 +11,6 @@ from gofer.ok import grade_notebook, id_generator
 
 from jupyterhub.services.auth import HubAuthenticated
 
-test_dirs = {'test': '/Users/vipasu/Dropbox/Berkeley/Y2Fall/gradememaybe/tests/notebooks/grading'}
 prefix = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 
 
@@ -29,19 +28,22 @@ class GoferHandler(HubAuthenticated, tornado.web.RequestHandler):
             self.get_current_user()
         req_data = tornado.escape.json_decode(self.request.body)
         # in the future, assignment should be metadata in notebook
-        assignment, notebook = req_data['assignment'], req_data['nb']
-        # change directory
-        test_dir = test_dirs[assignment]
-        os.chdir(test_dir)
-        # save notebook to this dir
+        notebook = req_data['nb']
+        section = notebook['metadata']['section']
+        lab = notebook['metadata']['lab']
+
+        # save notebook to temporary file
         fname = 'tmp.' + id_generator() + '.ipynb'
         while os.path.isfile(fname):
             # Generate new name is file exists
             fname = 'tmp.' + id_generator() + '.ipynb'
         with open(fname, 'w') as outfile:
             json.dump(notebook, outfile)
-        # execute notebook from this directory
-        grade = grade_notebook(fname)
+
+        loop = asyncio.get_event_loop()
+        task = loop.create_task(grade_lab(fname, section, lab))
+        grade = loop.run_until_complete(task)
+
         # remove file
         os.remove(fname)
         # return grade
@@ -50,7 +52,7 @@ class GoferHandler(HubAuthenticated, tornado.web.RequestHandler):
         self.finish()
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = tornado.web.Application([(prefix, GoferHandler)])
 

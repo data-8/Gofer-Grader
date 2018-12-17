@@ -13,11 +13,7 @@ define([
         var handler = function () {
             var nb = Jupyter.notebook.toJSON(); // get the ipynb file
             // TODO:  strip the output to send less data
-            // TODO:  see if test glob can also be encoded in metadata
-            // assignment can be set by using notebook metadata
-            // for now it's by hand
-            lab = "test";
-            payload = JSON.stringify({'assignment': lab, 'nb': nb});
+            payload = JSON.stringify({'nb': nb});
             otherParam = {
                 headers: {"Content-Type": "application/json"},
                 body: payload,

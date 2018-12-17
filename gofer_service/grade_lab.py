@@ -1,7 +1,3 @@
-import subprocess
-import argparse
-import os
-import json
 import asyncio
 import async_timeout
 
@@ -46,10 +42,10 @@ async def grade_lab(submission, section='3', lab='lab01'):
     lines = stdout.decode("utf-8").strip().split("\n")
     # print(lines)
     grade = float(lines[-1])
-    # print(grade)
+    return grade
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     task = loop.create_task(grade_lab())
     loop.run_until_complete(task)
-
