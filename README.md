@@ -19,6 +19,19 @@ Instructors can write tests in a subset of the [okpy test format](docs/ok-test-f
 code is correct or not. These notebooks / .py files can later
 be collected and a grade assigned to them automatically.
 
+### Integrating Gofer into your course
+
+As an effort to help autograding with Berkeley's offering of Data 8 online, this
+repo also contains two components that could be useful to others for their own
+courses. The primary one is a tornado service that receives notebook submissions
+and runs them in docker containers. The second piece is a Jupyter notebook
+extension that submits the current notebook to the service. Though they could be
+modified to work on your own setup, these are meant to play particularly nicely
+with [Jupyterhub]().
+
+Additional documentation in how to get them working is in the respective directories `gofer_service` and `submit_extension`.
+
+
 ## Why?
 
 [okpy](http://okpy.org/) is used at Berkeley for a number of large
