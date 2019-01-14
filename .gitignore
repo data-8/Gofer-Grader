@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# VS Code
+.vscode/
+
+.vs_code/
+.vscode
