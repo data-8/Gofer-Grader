@@ -3,34 +3,40 @@
 [![CircleCI](https://circleci.com/gh/data-8/Gofer-Grader/tree/master.svg?style=shield)](https://circleci.com/gh/data-8/Gofer-Grader/tree/master)
 [![codecov](https://codecov.io/gh/data-8/Gofer-Grader/branch/master/graph/badge.svg)](https://codecov.io/gh/data-8/Gofer-Grader)
 
-Simple library for interactive autograding.
+A library for Jupyter notebook autograding.
 
-Previous names include `gradememaybe` and `okgrade`.
+(Previous project names include `gradememaybe` and `okgrade`.)
 
 [See the Gofer Grader documentation](http://okgrade.readthedocs.io/en/latest/) for more information.
 
 ## What?
 
-This library can be used to **autograde** Jupyter Notebooks and
-Python files.
+This library can be used to **autograde** Jupyter Notebooks.
 
-Instructors can write tests in a subset of the [okpy test format](docs/ok-test-format.md)
-(other formats coming soon), and students can dynamically check if their
-code is correct or not. These notebooks / .py files can later
-be collected and a grade assigned to them automatically.
+Instructors can embed tests into an assignment notebook in one of two formats:
 
-### Integrating Gofer into your course
+1. A subset of the [okpy test format](docs/ok-test-format.md)
+2. The [gofer format](docs/gofer-format.md)
 
-As an effort to help autograding with Berkeley's offering of Data 8 online, this
-repo also contains two components that could be useful to others for their own
-courses. The primary one is a tornado service that receives notebook submissions
-and runs them in docker containers. The second piece is a Jupyter notebook
-extension that submits the current notebook to the service. Though they could be
-modified to work on your own setup, these are meant to play particularly nicely
-with [Jupyterhub]().
+(other formats might follow). Students can dynamically run tests as they work.
+Notebooks can later be collected, and the Gofer tools will assign a score
+automatically based on the tests distributed to students and any hidden tests.
+Gofer also generates PDFs for manual scoring.
 
-Additional documentation in how to get them working is in the respective directories `gofer_service` and `submit_extension`.
+### Gofer components
 
+1. A Tornado service that receives notebook submissions and runs them in docker
+   containers.
+
+2. A Jupyter notebook extension that submits the current notebook to the service.
+
+Though they could be modified to work on another setup, these tools are designed
+to play particularly nicely with [Jupyterhub]().
+
+Additional documentation in how to get them working is in the respective
+directories `gofer_service` and `submit_extension`.
+
+Tools for authoring Jupyter notebooks with tests appear in `author_tools`.
 
 ## Why?
 
