@@ -19,29 +19,12 @@ define([
                 body: payload,
                 method: "POST"
             };
-            /*  Example of filtering code cells
-                cells = cells.filter(function(c) {return c instanceof IPython.CodeCell;}) */
-
-
-            console.log(nb)
-            console.log(otherParam)
-            console.log(grading_url)
-            alert("Submitted assignment to Gofer. Close this window, and your grade will be returned when it's finished running!")
 
             fetch(grading_url, otherParam)
-                // processes the response (in this case grabs json)
-                .then(response=>{return response.json()})
+                // processes the response (in this case grabs text)
+                .then(response=>{return response.text()})
                 // processes the output of previous line (calling it data, then doing something with it)
-                .then(data=>{console.log( data); alert('Assignment grade is: ' + Math.round(100 * data).toString() + '%')});
-                // .then(response=>{console.log(response.body.getReader().read())});
-                // .then(response=>{grade = response.text().result; console.log(grade)});
-                // .then(function(resp){r = resp; console.log(resp)})
-                // .then(data=>{console.log( data.json())})
-                // .catch(error=>{console.log(error)})
-            // var json = await response.json();
-            // console.log(json);
-
-            // alert('grade is: ' + grade);
+                .then(data=>{console.log( data); alert(data)});
         };
 
         var action = {
