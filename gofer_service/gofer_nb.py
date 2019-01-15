@@ -6,8 +6,8 @@ import tornado.options
 import os
 import json
 import asyncio
+from tempfile import NamedTemporaryFile
 from grade_lab import grade_lab
-from gofer.ok import grade_notebook, id_generator
 
 from jupyterhub.services.auth import HubAuthenticated
 
@@ -16,13 +16,11 @@ prefix = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 
 class GoferHandler(HubAuthenticated, tornado.web.RequestHandler):
 
-    @tornado.web.asynchronous
-    def get(self):
+    async def get(self):
         self.write("This is a post only page. You probably shouldn't be here!")
         self.finish()
 
-    @tornado.web.asynchronous
-    def post(self):
+    async def post(self):
         """For grading submission, accept json notebook of submission"""
         if not self.current_user:
             self.get_current_user()
@@ -33,23 +31,17 @@ class GoferHandler(HubAuthenticated, tornado.web.RequestHandler):
         lab = notebook['metadata']['lab']
 
         # save notebook to temporary file
-        fname = 'tmp.' + id_generator() + '.ipynb'
-        while os.path.isfile(fname):
-            # Generate new name is file exists
-            fname = 'tmp.' + id_generator() + '.ipynb'
-        with open(fname, 'w') as outfile:
-            json.dump(notebook, outfile)
+        tempfile = NamedTemporaryFile('w', delete=False)
+        json.dump(notebook, tempfile)
+        tempfile.close()
 
-        loop = asyncio.get_event_loop()
-        task = loop.create_task(grade_lab(fname, section, lab))
-        grade = loop.run_until_complete(task)
+        grade = await grade_lab(tempfile.name, section, lab)
 
         # remove file
-        os.remove(fname)
+        os.remove(tempfile.name)
         # return grade
-        print(grade)
+        print(section, lab, grade)
         self.write(str(grade))
-        self.finish()
 
 
 if __name__ == '__main__':
