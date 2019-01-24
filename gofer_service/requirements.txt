@@ -16,9 +16,11 @@ ipython-genutils==0.2.0
 jedi==0.13.2
 Jinja2==2.10
 jupyterhub==0.9.4
+lxml=4.3.0
 Mako==1.0.7
 MarkupSafe==1.1.0
 multidict==4.5.2
+oauthlib==3.0.0
 pamela==0.3.0
 parso==0.3.1
 pexpect==4.6.0
