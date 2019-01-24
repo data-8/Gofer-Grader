@@ -109,7 +109,8 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
                     code_lines = []
                     for line in cell['source']:
                         # Filter out ipython magic commands
-                        if not line.startswith('%'):
+                        # Filter out interact widget
+                        if not line.startswith('%') and ("interact(" not in line):
                             code_lines.append(line)
                     cell_source = isp.transform_cell(''.join(code_lines))
                     exec(cell_source, global_env)
