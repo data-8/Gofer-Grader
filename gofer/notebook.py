@@ -61,11 +61,16 @@ class CheckCallWrapper(ast.NodeTransformer):
         return ast.Call(func=func, args=args, keywords=[])
 
     def visit_Call(self, node):
+        """Function that handles whether a given function call is a 'check' call
+        and transforms the node accordingly."""
         # test case is if check is .check
         if isinstance(node.func, ast.Attribute):
             return node
-        elif node.func.id == 'check':
-            return self.node_constructor(node)
+        elif isinstance(node.func, ast.Name):
+            if node.func.id == 'check':
+                return self.node_constructor(node)
+            else:
+                return node
         else:
             return node
 
