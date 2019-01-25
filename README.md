@@ -21,34 +21,21 @@ be collected and a grade assigned to them automatically.
 
 ### Integrating Gofer into your course
 
-As an effort to help autograding with Berkeley's offering of Data 8 online, this
-repo also contains two components that could be useful to others for their own
-courses. The primary one is a tornado service that receives notebook submissions
-and runs them in docker containers. The second piece is a Jupyter notebook
-extension that submits the current notebook to the service. Though they could be
-modified to work on your own setup, these are meant to play particularly nicely
-with [Jupyterhub]().
-
-Additional documentation in how to get them working is in the respective directories `gofer_service` and `submit_extension`.
-
+As an effort to help autograding with Berkeley's offering of Data 8 online,
+Gofer also works with two other components that could be useful for other
+courses. courses. The primary one, [Gofer service](https://github.com/data-8/gofer_service),
+is a tornado service that receives notebook submissions and runs/grades them in
+docker containers. The second piece, [Gofer submit](https://github.com/data-8/gofer_submit)
+is a Jupyter notebook extension that submits the current notebook to the
+service. Though they could be modified to work on your own setup, these are
+meant to play particularly nicely with
+[Jupyterhub](https://github.com/jupyterhub/jupyterhub).
 
 ## Why?
 
 [okpy](http://okpy.org/) is used at Berkeley for a number of large
 classes (CS61A, data8, etc). It has a lot of features that are
-very useful for large and diverse classes, such as:
-
-1. Office Hours management
-2. Student assignment statistics
-3. Plagiarism detection
-4. Personalized feedback
-5. Backups of student submissions
-6. Support for Python, Scheme and other languages
-7. Hiding / locking tests when students are running them locally
-8. Mass automatic grading
-
-And many more.
-
+very useful for large and diverse classes.
 However, this comes with a complexity cost for instructors who only
 need a subset of these features and sysadmins operating an okpy server
 installation.
