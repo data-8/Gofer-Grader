@@ -107,11 +107,17 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
                 isp = IPythonInputSplitter(line_input_checker=False)
                 try:
                     code_lines = []
-                    for line in cell['source']:
+                    cell_source_lines = cell['source']
+                    if isinstance(source, str):
+                        cell_source_lines = cell_source.split('\n')
+
+                    for line in cell_source_lines:
                         # Filter out ipython magic commands
                         # Filter out interact widget
-                        if not line.startswith('%') and ("interact(" not in line):
-                            code_lines.append(line)
+                        if not line.startswith('%'):
+                            if "interact(" not in line:
+                                code_lines.append(line)
+                                code_lines.append('\n')
                     cell_source = isp.transform_cell(''.join(code_lines))
                     exec(cell_source, global_env)
                     source += cell_source
