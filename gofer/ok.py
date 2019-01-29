@@ -1,6 +1,7 @@
 import doctest
 import inspect
 import io
+import itertools
 import json
 import glob
 import random
@@ -238,10 +239,18 @@ def grade_notebook(notebook_path, tests_glob=None):
     # Check for tests which were not included in the notebook and specified by tests_globs
     # Allows instructors to run notebooks with additional tests not accessible to user
     if tests_glob:
-        extra_tests = [OKTests([t]) for t in sorted(tests_glob)]
+        # unpack list of paths into a single list
+        tested_set = list(itertools.chain(*[r.paths for r in test_results]))
+        print(tested_set)
+        extra_tests = []
+        for t in sorted(tests_glob):
+            include = True
+            for tested in tested_set:
+                if tested in t:     # e.g. if 'tests/q1.py' is in /srv/repo/lab01/tests/q1.py'
+                    include = False
+            if include:
+                extra_tests.append(OKTests([t]))
         extra_results = [t.run(global_env, include_grade=False) for t in extra_tests]
-        tested_set = [r.paths for r in test_results]
-        extra_results = [er for er in extra_results if er.paths not in tested_set]
         test_results += extra_results
 
     # avoid divide by zero error if there are no tests
