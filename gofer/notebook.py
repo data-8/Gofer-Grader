@@ -35,6 +35,8 @@ def find_check_assignment(tree):
                 target_names += [t.id for t in target]
             elif isinstance(target, ast.Tuple) or isinstance(target, ast.List):
                 target_names += [t.id for t in target.elts]
+            elif isinstance(target, ast.Subscript):
+                target_names.append(target.value.id)
             else:
                 target_names.append(target.id)
         if 'check' in target_names:
@@ -107,13 +109,20 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
                 isp = IPythonInputSplitter(line_input_checker=False)
                 try:
                     code_lines = []
-                    for line in cell['source'].split('\n'):
+                    cell_source_lines = cell['source']
+                    source_is_str_bool = False
+                    if isinstance(cell_source_lines, str):
+                        source_is_str_bool = True
+                        cell_source_lines = cell_source_lines.split('\n')
+
+                    for line in cell_source_lines:
                         # Filter out ipython magic commands
                         # Filter out interact widget
                         if not line.startswith('%'):
                             if "interact(" not in line:
                                 code_lines.append(line)
-                                code_lines.append('\n')
+                                if source_is_str_bool:
+                                    code_lines.append('\n')
                     cell_source = isp.transform_cell(''.join(code_lines))
                     exec(cell_source, global_env)
                     source += cell_source
