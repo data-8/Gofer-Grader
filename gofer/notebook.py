@@ -108,7 +108,9 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
                 try:
                     code_lines = []
                     cell_source_lines = cell['source']
+                    source_is_str_bool = False
                     if isinstance(cell_source_lines, str):
+                        source_is_str_bool = True
                         cell_source_lines = cell_source_lines.split('\n')
 
                     for line in cell_source_lines:
@@ -117,7 +119,8 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
                         if not line.startswith('%'):
                             if "interact(" not in line:
                                 code_lines.append(line)
-                                code_lines.append('\n')
+                                if source_is_str_bool:
+                                    code_lines.append('\n')
                     cell_source = isp.transform_cell(''.join(code_lines))
                     exec(cell_source, global_env)
                     source += cell_source
