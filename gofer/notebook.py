@@ -108,8 +108,8 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
                 try:
                     code_lines = []
                     cell_source_lines = cell['source']
-                    if isinstance(source, str):
-                        cell_source_lines = cell_source.split('\n')
+                    if isinstance(cell_source_lines, str):
+                        cell_source_lines = cell_source_lines.split('\n')
 
                     for line in cell_source_lines:
                         # Filter out ipython magic commands
