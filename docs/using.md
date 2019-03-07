@@ -1,6 +1,6 @@
 # Using Gofer Grader
 
-1. Write your tests in [ok test format](ok-test-format.html),
+1. Write your tests in [ok test format](ok-test-format.md),
    and distribute them the same way you distribute lab notebooks
    to students.
 2. In the lab notebooks distributed to your students, import
@@ -18,6 +18,8 @@
 
    This will run the tests in `q1.py` with the student's
    current environment, and provide interactive results.
+
+Click [here](GoferDemo.zip) for a demo file of a lab notebook and test suite.
 
 ## Drop-in replacement for okpy
 
