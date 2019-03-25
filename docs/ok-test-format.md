@@ -55,7 +55,7 @@ for this particular oktest.
 
 ## Example
 
-Lets' walk through an example! A demo file can be found [here](GoferDemo.zip).
+Lets' walk through an example! See [usage documentation](using.md) for a demo Docker image of this example.
 
 We want our students to find the total number of seconds in a decade &
 assign it to the variable `seconds_in_a_decade`. We want to progressively
