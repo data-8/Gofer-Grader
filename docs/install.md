@@ -3,7 +3,7 @@
 Gofer Grader can be installed from git directly for now.
 
 ```bash
-pip install git+https://github.com/grading/gradememaybe.git
+pip install gofer-grader
 ```
 
 Since both this package and the [okpy](https://pypi.org/project/okpy/) package

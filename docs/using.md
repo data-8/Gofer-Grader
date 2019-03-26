@@ -1,6 +1,6 @@
 # Using Gofer Grader
 
-1. Write your tests in [ok test format](ok-test-format.html),
+1. Write your tests in [ok test format](ok-test-format.md),
    and distribute them the same way you distribute lab notebooks
    to students.
 2. In the lab notebooks distributed to your students, import
@@ -18,6 +18,24 @@
 
    This will run the tests in `q1.py` with the student's
    current environment, and provide interactive results.
+
+# Usage Demo
+
+To test out Gofer Grader, we've provided a sample Docker image with a demo notebook and test file. Make sure Docker is installed and running on your computer. 
+   
+In your terminal, run  
+
+    ```
+    docker run -p 8888:8888 gavrilm/gofer-grader-demo
+    ```  
+  
+This will download the demo image and start it in a new container, exposing port 8888 as the notebook server. Then, go to your browser and paste in the URL printed in the terminal to access the demo. It should be in the format:
+
+    ```
+    http://<ip address here>:8888?token=<token number here>
+    ```
+  
+\*Note: the IP address printed in the terminal may not be correct. Run `docker-machine ip` in the terminal for the correct one.\*
 
 ## Drop-in replacement for okpy
 
