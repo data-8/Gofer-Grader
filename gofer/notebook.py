@@ -108,7 +108,7 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
                 # FIXME: use appropriate IPython functions here
                 isp = IPythonInputSplitter(line_input_checker=False)
                 try:
-                    code_lines = []
+                    code_lines = ['import warnings', 'warnings.filterwarnings("ignore")']
                     cell_source_lines = cell['source']
                     source_is_str_bool = False
                     if isinstance(cell_source_lines, str):
