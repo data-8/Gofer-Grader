@@ -2,6 +2,7 @@ from contextlib import redirect_stderr, redirect_stdout
 import inspect
 from .utils import hide_outputs
 import ast
+import os
 
 try:
     from IPython.core.inputsplitter import IPythonInputSplitter
@@ -142,7 +143,7 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
 
         cleaned_source = compile(tree, filename="nb-ast", mode="exec")
         try:
-            with open('/dev/null', 'w') as f, redirect_stdout(f), redirect_stderr(f):
+            with open(os.devnull, 'w') as f, redirect_stdout(f), redirect_stderr(f):
                 exec(cleaned_source, global_env)
         except:
             if not ignore_errors:

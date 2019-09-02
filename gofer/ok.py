@@ -4,6 +4,7 @@ import io
 import itertools
 import json
 import glob
+import os
 import random
 import string
 from contextlib import redirect_stderr, redirect_stdout
@@ -43,7 +44,7 @@ def run_doctest(name, doctest_string, global_environment):
     runresults = io.StringIO()
     with redirect_stdout(runresults), redirect_stderr(runresults), hide_outputs():
         doctestrunner.run(test, clear_globs=False)
-    with open('/dev/null', 'w') as f, redirect_stderr(f), redirect_stdout(f):
+    with open(os.devnull, 'w') as f, redirect_stderr(f), redirect_stdout(f):
         result = doctestrunner.summarize(verbose=True)
     # An individual test can only pass or fail
     if result.failed == 0:
