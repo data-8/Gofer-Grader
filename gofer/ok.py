@@ -3,8 +3,8 @@ import inspect
 import io
 import itertools
 import json
-import glob
 import os
+import os.path as op
 import random
 import string
 from contextlib import redirect_stderr, redirect_stdout
@@ -12,7 +12,7 @@ from jinja2 import Template
 from textwrap import dedent
 
 from .notebook import execute_notebook, _global_anywhere
-from .utils import hide_outputs
+from .utils import hide_outputs, cd
 from pygments import highlight
 from pygments.lexers import PythonConsoleLexer
 from pygments.formatters import HtmlFormatter
@@ -209,56 +209,96 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def grade_notebook(notebook_path, tests_glob=None):
-    """
-    Grade a notebook file & return grade
-    """
+def _already_in_gofer():
     try:
         # Lots of notebooks call grade_notebook in them. These notebooks are then
         # executed by gofer - which will in-turn execute grade_notebook again!
         # This puts us in an infinite loop.
         # We use this sentinel to detect and break out of that loop.
         _global_anywhere('__GOFER_GRADER__')
+        return True
+    except NameError:
+        return False
+
+
+def run_nb_tests(nb, cwd,
+                 tests_glob=None,
+                 initial_env=None,
+                 ignore_errors=True):
+    """
+    Run tests on a loaded notebook and return score, test_results
+
+    Parameters
+    ----------
+    nb : dict
+        Notebook dictionary.
+    cwd : str
+        Path in which to run notebook / test code.
+    tests_glob : None or sequence
+        Sequence of filenames for tests to run.  If None, corresponds to empty
+        sequence.
+    initial_env : None or dict
+        Initial environment for running tests.  Defaults to empty.
+    ignore_errors : {True, False}
+        If True, ignore errors when executing notebook.
+
+    Returns
+    -------
+    test_results : list
+        List of class:`OKTestResult` instances.
+    """
+    initial_env = {} if initial_env is None else initial_env
+    if _already_in_gofer():
         # FIXME: Do something else here?
         return None
-    except NameError:
-        pass
-
-    with open(notebook_path) as f:
-        nb = json.load(f)
 
     secret = id_generator()
     results_array = "check_results_{}".format(secret)
-    initial_env = {
+    initial_env.update({
         # Set this to prevent recursive executions!
         '__GOFER_GRADER__': True,
         results_array: []
-    }
+    })
 
-    global_env = execute_notebook(nb, secret, initial_env, ignore_errors=True)
+    with cd(cwd):
+        global_env = execute_notebook(nb,
+                                      secret,
+                                      initial_env,
+                                      ignore_errors=ignore_errors)
 
     test_results = global_env[results_array]
 
-    # Check for tests which were not included in the notebook and specified by tests_globs
-    # Allows instructors to run notebooks with additional tests not accessible to user
-    if tests_glob:
-        # unpack list of paths into a single list
-        tested_set = list(itertools.chain(*[r.paths for r in test_results]))
-        print(tested_set)
-        extra_tests = []
-        for t in sorted(tests_glob):
-            include = True
-            for tested in tested_set:
-                if tested in t:     # e.g. if 'tests/q1.py' is in /srv/repo/lab01/tests/q1.py'
-                    include = False
-            if include:
-                extra_tests.append(OKTests([t]))
-        extra_results = [t.run(global_env, include_grade=False) for t in extra_tests]
-        test_results += extra_results
+    # Check for tests which were not included in the notebook and specified by
+    # tests_globs.
+    # Allows instructors to run notebooks with additional tests not accessible
+    # to user.
+    if tests_glob is None or len(tests_glob) == 0:
+        return test_results
 
+    # unpack list of paths into a single list
+    tested_set = list(itertools.chain(*[r.paths for r in test_results]))
+    print(tested_set)
+    extra_tests = []
+    for t in sorted(tests_glob):
+        include = True
+        for tested in tested_set:
+            if tested in t:     # e.g. if 'tests/q1.py' is in /srv/repo/lab01/tests/q1.py'
+                include = False
+        if include:
+            extra_tests.append(OKTests([t], cwd=cwd))
+    extra_results = [t.run(global_env, include_grade=False) for t in extra_tests]
+    return test_results + extra_results
+
+
+def grade_notebook(notebook_path, tests_glob=None):
+    """
+    Grade a notebook file & return grade
+    """
+    with open(notebook_path) as f:
+        nb = json.load(f)
+    test_results = run_nb_tests(nb, op.dirname(notebook_path), tests_glob)
     # avoid divide by zero error if there are no tests
     score = sum([r.grade for r in test_results])/max(len(test_results), 1)
-
     # If within an IPython or Jupyter environment, display hints
     display_defined = False
     try:
