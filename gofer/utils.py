@@ -1,6 +1,9 @@
+import os
 import sys
 from contextlib import contextmanager
+
 from IPython import get_ipython
+
 
 def flush_inline_matplotlib_plots():
     """
@@ -47,3 +50,15 @@ def hide_outputs():
     finally:
         flush_inline_matplotlib_plots()
         ipy.display_formatter.formatters = old_formatters
+
+
+@contextmanager
+def cd(newdir):
+    """ Context manager to change working directory
+    """
+    prevdir = os.getcwd()
+    os.chdir(os.path.expanduser(newdir))
+    try:
+        yield
+    finally:
+        os.chdir(prevdir)
