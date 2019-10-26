@@ -122,14 +122,16 @@ class OKTest:
         # Only support doctest. I am unsure if other tests are implemented
         assert test_suite.get('type', 'doctest') == 'doctest'
 
-        # Not setup and teardown supported
-        assert not bool(test_suite.get('setup'))
-        assert not bool(test_suite.get('teardown'))
+        # setup and teardown supported
+        setup = test_suite.get('setup')
+        teardown = test_suite.get('teardown')
 
         tests = []
 
         for i, test_case in enumerate(test_spec['suites'][0]['cases']):
-            tests.append(dedent(test_case['code']))
+            code_parts = [setup, test_case['code'], teardown]
+            code = '\n'.join(dedent(p) for p in code_parts if p)
+            tests.append(code)
 
         return cls(path, tests)
 
