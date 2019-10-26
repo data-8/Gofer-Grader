@@ -135,15 +135,17 @@ class OKTest:
 
 
 class OKTests:
-    def __init__(self, test_paths):
+    def __init__(self, test_paths, cwd=None):
         self.paths = test_paths
         self.tests = [OKTest.from_file(path) for path in self.paths]
+        self.cwd = cwd if cwd else os.getcwd()
 
     def run(self, global_environment, include_grade=True):
         passed_tests = []
         failed_tests = []
         for t in self.tests:
-            passed, hint = t.run(global_environment)
+            with cd(self.cwd):
+                passed, hint = t.run(global_environment)
             if passed:
                 passed_tests.append(t)
             else:
@@ -273,7 +275,7 @@ def grade_notebook(notebook_path, tests_glob=None):
     return score
 
 
-def check(test_file_path, global_env=None):
+def check(test_file_path, global_env=None, cwd=None):
     """
     check global_env against given test_file in oktest format
 
@@ -286,7 +288,7 @@ def check(test_file_path, global_env=None):
 
     Returns a TestResult object.
     """
-    tests = OKTests([test_file_path])
+    tests = OKTests([test_file_path], cwd=cwd)
 
     if global_env is None:
         # Get the global env of our callers - one level below us in the stack
