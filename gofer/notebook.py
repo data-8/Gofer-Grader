@@ -78,7 +78,7 @@ class CheckCallWrapper(ast.NodeTransformer):
             return node
 
 
-def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False):
+def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False, script=False):
     """
     Execute notebook & return the global environment that results from execution.
 
@@ -97,39 +97,47 @@ def execute_notebook(nb, secret='secret', initial_env=None, ignore_errors=False)
             global_env = {}
         source = ""
 
-        # Before rewriting AST, find cells of code that generate errors.
-        # One round of execution is done beforehand to mimic the Jupyter notebook style of running
-        # (e.g. code runs up to the point of execution).
-        # The reason this is workaround is introduced is because once the
-        # source code is parsed into an AST, there is no sense of local cells
+        if script:
+            try:
+                exec(nb, global_env)
+                source += nb
+            except:
+                if not ignore_errors:
+                    raise
+        else:
+            # Before rewriting AST, find cells of code that generate errors.
+            # One round of execution is done beforehand to mimic the Jupyter notebook style of running
+            # (e.g. code runs up to the point of execution).
+            # The reason this is workaround is introduced is because once the
+            # source code is parsed into an AST, there is no sense of local cells
 
-        for cell in nb['cells']:
-            if cell['cell_type'] == 'code':
-                # transform the input to executable Python
-                # FIXME: use appropriate IPython functions here
-                isp = IPythonInputSplitter(line_input_checker=False)
-                try:
-                    code_lines = []
-                    cell_source_lines = cell['source']
-                    source_is_str_bool = False
-                    if isinstance(cell_source_lines, str):
-                        source_is_str_bool = True
-                        cell_source_lines = cell_source_lines.split('\n')
+            for cell in nb['cells']:
+                if cell['cell_type'] == 'code':
+                    # transform the input to executable Python
+                    # FIXME: use appropriate IPython functions here
+                    isp = IPythonInputSplitter(line_input_checker=False)
+                    try:
+                        code_lines = []
+                        cell_source_lines = cell['source']
+                        source_is_str_bool = False
+                        if isinstance(cell_source_lines, str):
+                            source_is_str_bool = True
+                            cell_source_lines = cell_source_lines.split('\n')
 
-                    for line in cell_source_lines:
-                        # Filter out ipython magic commands
-                        # Filter out interact widget
-                        if not line.startswith('%'):
-                            if "interact(" not in line:
-                                code_lines.append(line)
-                                if source_is_str_bool:
-                                    code_lines.append('\n')
-                    cell_source = isp.transform_cell(''.join(code_lines))
-                    exec(cell_source, global_env)
-                    source += cell_source
-                except:
-                    if not ignore_errors:
-                        raise
+                        for line in cell_source_lines:
+                            # Filter out ipython magic commands
+                            # Filter out interact widget
+                            if not line.startswith('%'):
+                                if "interact(" not in line:
+                                    code_lines.append(line)
+                                    if source_is_str_bool:
+                                        code_lines.append('\n')
+                        cell_source = isp.transform_cell(''.join(code_lines))
+                        exec(cell_source, global_env)
+                        source += cell_source
+                    except:
+                        if not ignore_errors:
+                            raise
 
         tree = ast.parse(source)
         if find_check_assignment(tree) or find_check_definition(tree):
