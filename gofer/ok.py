@@ -76,12 +76,13 @@ class OKTest:
     <p><strong>Test result:</strong><pre>{{test_result}}</pre></p>
     """)
 
-    def __init__(self, name, tests):
+    def __init__(self, name, tests, value=1):
         """
         tests is list of doctests that should be run.
         """
         self.name = name
         self.tests = tests
+        self.value = value
 
     def run(self, global_environment):
         for i, t in enumerate(self.tests):
@@ -114,9 +115,6 @@ class OKTest:
         # Do not support multiple suites in the same file
         assert len(test_spec['suites']) == 1
 
-        # Do not support point values other than 1
-        assert test_spec.get('points', 1) == 1
-
         test_suite = test_spec['suites'][0]
 
         # Only support doctest. I am unsure if other tests are implemented
@@ -131,7 +129,7 @@ class OKTest:
         for i, test_case in enumerate(test_spec['suites'][0]['cases']):
             tests.append(dedent(test_case['code']))
 
-        return cls(path, tests)
+        return cls(path, tests, test_spec.get('points', 1))
 
 
 class OKTests:
@@ -142,14 +140,18 @@ class OKTests:
     def run(self, global_environment, include_grade=True):
         passed_tests = []
         failed_tests = []
+        grade = 0
+        total = 0
         for t in self.tests:
+            total += t.value
             passed, hint = t.run(global_environment)
             if passed:
+                grade += t.value
                 passed_tests.append(t)
             else:
                 failed_tests.append((t, hint))
 
-        grade = len(passed_tests) / len(self.tests)
+        grade /= total
 
         return OKTestsResult(grade, self.paths, self.tests, passed_tests,
                              failed_tests, include_grade)
