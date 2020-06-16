@@ -1,4 +1,5 @@
 import os
+import os.path as op
 import json
 import pytest
 from glob import glob
@@ -102,3 +103,16 @@ def test_grade_notebook():
 
     zero_grade_notebook = os.path.join(here, 'notebooks/grading/zero-grade.ipynb')
     assert grade_notebook(zero_grade_notebook, glob(test_paths)) == 0
+
+
+def test_setup_teardown():
+    gnb_path = op.join(here, 'notebooks', 'grading')
+    extra_path = op.join(gnb_path, 'extra_tests')
+    setup_test = op.join(extra_path, 'setup_example.py')
+    full_grade_notebook = op.join(gnb_path, 'full-grade.ipynb')
+    assert grade_notebook(full_grade_notebook, [setup_test]) == 1
+    import_test = op.join(extra_path, 'import_example.py')
+    assert grade_notebook(full_grade_notebook, [import_test]) == 1
+    setup_td_test = op.join(extra_path, 'setup_teardown_example.py')
+    # The assert in the teardown generates a failure.
+    assert grade_notebook(full_grade_notebook, [setup_td_test]) == 0
