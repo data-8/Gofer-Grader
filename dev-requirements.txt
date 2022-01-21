@@ -1,5 +1,5 @@
 pytest==3.6.0
-ipython==6.4.0
+ipython==7.16.3
 # Setting up code coverage statistics
 codecov==2.0.15
 pytest-cov==2.5.1
